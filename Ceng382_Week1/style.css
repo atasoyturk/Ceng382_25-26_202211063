@@ -26,6 +26,8 @@ body {
     align-items: center; 
 }
 
+/*Topbar Styles*/
+
 .topbar {
     display: flex;
     align-items: center;
@@ -85,17 +87,18 @@ body {
     font-size: 0.85rem;
 }
 
-
+/*Layout Styles*/
 .layout {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
+    margin-top: var(--topbar-height);
+    min-height: calc(100vh - var(--topbar-height));
 }
+
 .sidebar {
-    width: 200px;
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
     background-color: #f4f7f6;
-    padding: 1rem;
+    padding: 1.5rem 1rem;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     position: fixed;
@@ -109,4 +112,45 @@ body {
     color: var(--primary-color);
     flex-direction: column;
     display: block;
+}
+
+.sidebar__link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
+
+.sidebar__link:hover {
+    background: rgba(0,0,0,0.07);
+}
+
+.sidebar__link.is-active {
+    background-color: #b0cce6;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.sidebar__card {
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    background: #d8e8f0;
+    border-radius: var(--radius);
+    border: 1px solid #b8cfe0;
+}
+
+.sidebar__cardTitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--primary-color);
+}
+
+.sidebar__cardText {
+    font-size: 0.8rem;
+    color: #555;
+    line-height: 1.4;
 }
