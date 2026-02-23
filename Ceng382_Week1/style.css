@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #193e63;
-    --accent-color: #cd0f0f;
+    --primary-color: #001e3c;
+    --accent-color: #a10909;
     --bg-light: #f4f7f6;
     --text-dark: #333;
     --white: #ffffff;
@@ -21,9 +21,6 @@ body {
     line-height: 1.6;
     background-color: var(--bg-light);
     color: var(--text-dark);
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
 }
 
 /*Topbar Styles*/
@@ -31,7 +28,7 @@ body {
 .topbar {
     display: flex;
     align-items: center;
-    background-color: #333;
+    background-color: #a10909;
     padding: 1rem;
     height: var(--topbar-height);
     position: fixed;
@@ -57,7 +54,7 @@ body {
 }
 
 .topnav__link {
-    color: #ccc;
+    color: #f78787;
     text-decoration: none;
     font-size: 1rem;
     padding: 0.5rem 1rem;
@@ -80,7 +77,7 @@ body {
 }
 
 .user__pill {
-    background: #415566;
+    background: #7d080e;
     color: #fff;
     padding: 0.2rem 0.75rem;
     border-radius: 20px;
@@ -99,12 +96,11 @@ body {
     min-width: var(--sidebar-width);
     background-color: #f4f7f6;
     padding: 1.5rem 1rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    
 }
 .sidebar__title {
     font-size: 1.2rem;
@@ -129,7 +125,7 @@ body {
 }
 
 .sidebar__link.is-active {
-    background-color: #b0cce6;
+    background-color: var(--accent-color);
     color: var(--primary-color);
     font-weight: 600;
 }
@@ -137,7 +133,7 @@ body {
 .sidebar__card {
     margin-top: 1.5rem;
     padding: 0.75rem;
-    background: #d8e8f0;
+    background: var(--accent-color);
     border-radius: var(--radius);
     border: 1px solid #b8cfe0;
 }
@@ -151,6 +147,122 @@ body {
 
 .sidebar__cardText {
     font-size: 0.8rem;
-    color: #555;
+    color: #fff;
     line-height: 1.4;
+}
+
+/*Main*/
+.content {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/*Card Styles*/
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+}
+
+.card__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+}
+
+.card__subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.card__text {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+/*Badges*/
+.badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: #e8eef2;
+    color: #444;
+    padding: 0.2rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    border: 1px solid #c8d8e4;
+}
+
+/*Table Styles*/
+.tableWrap {
+    overflow-x: auto;
+    margin-bottom: 0.75rem;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.dataTable th {
+    text-align: left;
+    padding: 0.6rem 1rem;
+    border-bottom: 2px solid #ddd;
+    color: #555;
+    font-weight: 600;
+}
+
+.dataTable td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #eee;
+    color: var(--text-dark);
+}
+
+.dataTable tbody tr:hover {
+    background-color: #f0f6fb;
+}
+
+.muted {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 0.5rem;
+}
+
+/*Footer Style*/
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0 0.5rem;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.footer__sep {
+    color: #bbb;
+}
+
+.footer__link {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer__link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
 }
