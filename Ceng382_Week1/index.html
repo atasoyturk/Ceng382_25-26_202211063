@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HTML + CSS Demo</title>
   <link rel="stylesheet" href="style.css" />
+
 </head>
 
 <body>
@@ -53,6 +54,8 @@
           margin, border, hover, active” gibi konuları göstermek için ideal.
         </p>
 
+        <button class = "buttons" id="change_text">Yazıyı Değiştir</button>
+
         <div class="badges">
           <span class="badge">HTML Semantik</span>
           <span class="badge">Flexbox</span>
@@ -88,13 +91,17 @@
               </tr>
             </tbody>
           </table>
+          <button class = "buttons" id = "change_table">Tabloyu Sırala</button>
         </div>
 
         <p class="muted">
           Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
         </p>
       </section>
-
+      <div class =  "image_container">
+        <img src = "normal.png" class = "profile_image">
+      </div>
+      <button class="buttons" id="change_image">Resmi Değiştir</button>
       <footer class="footer">
         <span>© 2026 - Web Programming</span>
         <span class="footer__sep">•</span>
@@ -103,5 +110,6 @@
       </footer>
     </main>
   </div>
+  <script src="javascript.js" defer></script>
 </body>
 </html>

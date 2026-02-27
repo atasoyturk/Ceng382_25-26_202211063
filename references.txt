@@ -1,3 +1,9 @@
+lab1
 [1] Gemini, "ceng382-lab1" Gemini shared conversation. [Online].
 Available: https://gemini.google.com/share/e9a7b4c8b4bb
 Accessed: Feb. 23, 2026.
+
+lab2
+[1] ChatGPT, "ceng382-lab2" ChatGPT shared conversation. [Online].
+Available: https://chatgpt.com/c/69a13ae7-6fc4-832d-a89a-95b02fdde8e0
+Accessed: Feb. 27, 2026.

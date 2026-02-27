@@ -266,3 +266,15 @@ body {
     color: var(--primary-color);
     text-decoration: underline;
 }
+
+.buttons{
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    
+    display: block;
+    margin: 0 auto;
+}
