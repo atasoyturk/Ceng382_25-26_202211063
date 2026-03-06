@@ -1,10 +1,45 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Student Grade Table";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Student Grade Table</h2>
+        <form method="post">
+            <button asp-page-handler="Calculate" class="btn btn-primary">Calculate Grades</button>
+        </form>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Student</th>
+                <th>Midterm</th>
+                <th>Final</th>
+                <th>Letter Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Students != null)
+            {
+                @foreach (var s in Model.Students)
+                {
+                    <tr>
+                        <td>@s.Id</td>
+                        <td>@s.Name</td>
+                        <td>@s.Midterm</td>
+                        <td>@s.Final</td>
+                        <td><strong>@s.Grade</strong></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    
+    <div class="alert alert-secondary">
+        Calculation: 40% Midterm + 60% Final
+    </div>
 </div>
