@@ -1,45 +1,128 @@
-﻿@page
-@model IndexModel
-@{
-    ViewData["Title"] = "Student Grade Table";
-}
+﻿<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTML + CSS Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Student Grade Table</h2>
-        <form method="post">
-            <button asp-page-handler="Calculate" class="btn btn-primary">Calculate Grades</button>
-        </form>
+<body>
+  <!-- TOP NAV -->
+  <header class="topbar">
+    <div class="brand">CENG Web Demo</div>
+
+    <nav class="topnav" aria-label="Üst Menü">
+      <a class="topnav__link is-active" href="#">Anasayfa</a>
+      <a class="topnav__link" href="#">Duyurular</a>
+      <a class="topnav__link" href="#">Notlar</a>
+      <a class="topnav__link" href="#">İletişim</a>
+    </nav>
+
+    <div class="user">
+      <span class="user__pill">Can</span>
     </div>
+  </header>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
+  <!-- PAGE LAYOUT -->
+  <div class="layout">
+    <!-- SIDE MENU -->
+    <aside class="sidebar" aria-label="Yan Menü">
+      <h2 class="sidebar__title">Menü</h2>
+      <a class="sidebar__link is-active" href="#">Dashboard</a>
+      <a class="sidebar__link" href="#">Ödevler</a>
+      <a class="sidebar__link" href="#">Kaynaklar</a>
+      <a class="sidebar__link" href="#">Ders Planı</a>
+      <a class="sidebar__link" href="#">Ayarlar</a>
+
+      <div class="sidebar__card">
+        <h3 class="sidebar__cardTitle">İpucu</h3>
+        <p class="sidebar__cardText">
+          Bu sayfa: header + aside + main düzenini gösterir.
+        </p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+      <section class="card">
+        <h1 class="card__title">1. Hafta: HTML & CSS Sayfa İskeleti</h1>
+        <p class="card__text">
+          Bu örnekte <strong>üst menü</strong>, <strong>yan menü</strong> ve ortada
+          <strong>3x5 tablo</strong> bulunuyor. Öğrenciler için sınıfta "kutu modeli, padding,
+          margin, border, hover, active" gibi konuları göstermek için ideal.
+        </p>
+
+        <button class="buttons" id="change_text">Yazıyı Değiştir</button>
+
+        <div class="badges">
+          <span class="badge">HTML Semantik</span>
+          <span class="badge">Flexbox</span>
+          <span class="badge">Tablo</span>
+          <span class="badge">Hover</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2>Öğrenci Başarı Tablosu</h2>
+          <form method="post">
+            <button asp-page-handler="Calculate" class="btn btn-primary">Not hesapla </button>
+          </form>
+        </div>
+
+        <div class="tableWrap">
+          <table class="dataTable table table-striped table-bordered">
+            <thead class="table-dark">
+              <tr>
                 <th>#</th>
-                <th>Student</th>
-                <th>Midterm</th>
+                <th>Öğrenci</th>
+                <th>Vize</th>
                 <th>Final</th>
-                <th>Letter Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Students != null)
-            {
+                <th>Harf Notu</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (Model.Students != null)
+              {
                 @foreach (var s in Model.Students)
                 {
-                    <tr>
-                        <td>@s.Id</td>
-                        <td>@s.Name</td>
-                        <td>@s.Midterm</td>
-                        <td>@s.Final</td>
-                        <td><strong>@s.Grade</strong></td>
-                    </tr>
+                  <tr>
+                    <td>@s.Id</td>
+                    <td>@s.Name</td>
+                    <td>@s.Midterm</td>
+                    <td>@s.Final</td>
+                    <td><strong>@s.Grade</strong></td>
+                  </tr>
                 }
-            }
-        </tbody>
-    </table>
-    
-    <div class="alert alert-secondary">
-        Calculation: 40% Midterm + 60% Final
-    </div>
-</div>
+              }
+            </tbody>
+          </table>
+          <button class="buttons" id="change_table">Tabloyu Sırala</button>
+        </div>
+
+        <div class="alert alert-secondary">
+          Calculation: 40% Midterm + 60% Final
+        </div>
+
+        <p class="muted">
+          Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
+        </p>
+      </section>
+
+      <div class="image_container">
+        <img src="normal.png" class="profile_image">
+      </div>
+      <button class="buttons" id="change_image">Resmi Değiştir</button>
+
+      <footer class="footer">
+        <span>© 2026 - Web Programming</span>
+        <span class="footer__sep">•</span>
+        <a class="footer__link" href="#">Gizlilik</a>
+        <a class="footer__link" href="#">Yardım</a>
+      </footer>
+    </main>
+  </div>
+  <script src="javascript.js" defer></script>
+</body>
+</html>
