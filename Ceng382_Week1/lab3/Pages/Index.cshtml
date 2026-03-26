@@ -1,135 +1,166 @@
 ﻿@page
 @model IndexModel
-
 @{
-  ViewData[index: "Title"] = "Home page";
+    ViewData["Title"] = "Home page";
 }
 
-<!doctype html>
-<html lang="tr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HTML + CSS Demo</title>
-  <link rel="stylesheet" href="site.css" />
-</head>
-
-<body>
-  <!-- TOP NAV -->
-  <header class="topbar">
-    <div class="brand">CENG Web Demo</div>
-
-    <nav class="topnav" aria-label="Üst Menü">
-      <a class="topnav__link is-active" href="#">Anasayfa</a>
-      <a class="topnav__link" href="#">Duyurular</a>
-      <a class="topnav__link" href="#">Notlar</a>
-      <a class="topnav__link" href="#">İletişim</a>
-    </nav>
-
-    <div class="user">
-      <span class="user__pill">Can</span>
-    </div>
-  </header>
-
-  <!-- PAGE LAYOUT -->
-  <div class="layout">
-    <!-- SIDE MENU -->
-    <aside class="sidebar" aria-label="Yan Menü">
-      <h2 class="sidebar__title">Menü</h2>
-      <a class="sidebar__link is-active" href="#">Dashboard</a>
-      <a class="sidebar__link" href="#">Ödevler</a>
-      <a class="sidebar__link" href="#">Kaynaklar</a>
-      <a class="sidebar__link" href="#">Ders Planı</a>
-      <a class="sidebar__link" href="#">Ayarlar</a>
-
-      <div class="sidebar__card">
-        <h3 class="sidebar__cardTitle">İpucu</h3>
-        <p class="sidebar__cardText">
-          Bu sayfa: header + aside + main düzenini gösterir.
-        </p>
-      </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="content">
-      <section class="card">
-        <h1 class="card__title">1. Hafta: HTML & CSS Sayfa İskeleti</h1>
-        <p class="card__text">
-          Bu örnekte <strong>üst menü</strong>, <strong>yan menü</strong> ve ortada
-          <strong>3x5 tablo</strong> bulunuyor. Öğrenciler için sınıfta "kutu modeli, padding,
-          margin, border, hover, active" gibi konuları göstermek için ideal.
-        </p>
-
-        <button class="buttons" id="change_text">Yazıyı Değiştir</button>
-
-        <div class="badges">
-          <span class="badge">HTML Semantik</span>
-          <span class="badge">Flexbox</span>
-          <span class="badge">Tablo</span>
-          <span class="badge">Hover</span>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2>Öğrenci Başarı Tablosu</h2>
-          <form method="post">
-            <button asp-page-handler="Calculate" class="btn btn-primary">Not hesapla </button>
-          </form>
-        </div>
-
-        <div class="tableWrap">
-          <table class="dataTable table table-striped table-bordered">
+<!-- Kullanıcılar Tablosu Kartı -->
+<section class="card mb-4">
+    <h2 class="card__title">Kayıtlı Kullanıcılar</h2>
+    <div class="tableWrap">
+        <table class="dataTable table table-striped table-bordered">
             <thead class="table-dark">
-              <tr>
-                <th>#</th>
-                <th>Öğrenci</th>
-                <th>Vize</th>
-                <th>Final</th>
-                <th>Harf Notu</th>
-              </tr>
+                <tr>
+                    <th>Fotoğraf</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>E-posta</th>
+                </tr>
             </thead>
             <tbody>
-              @if (Model.Students != null)
-              {
+                @foreach (var user in Model.AppUsers)
+                {
+                    <tr>
+                        <td>
+                            @if (user.PhotoBase64 != null)
+                            {
+                                <img src="data:@user.PhotoContentType;base64,@user.PhotoBase64"
+                                     style="width:48px;height:48px;object-fit:cover;border-radius:50%;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Öğrenci Başarı Tablosu Kartı -->
+<section class="card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Öğrenci Başarı Tablosu</h2>
+        <form method="post">
+            <button asp-page-handler="Calculate" class="btn btn-primary">Not Hesapla</button>
+        </form>
+    </div>
+
+    <div class="tableWrap">
+        <table class="dataTable table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Öğrenci</th>
+                    <th>Vize</th>
+                    <th>Final</th>
+                    <th>Harf Notu</th>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach (var s in Model.Students)
                 {
-                  <tr>
-                    <td>@s.Id</td>
-                    <td>@s.Name</td>
-                    <td>@s.Midterm</td>
-                    <td>@s.Final</td>
-                    <td><strong>@s.Grade</strong></td>
-                  </tr>
+                    <tr>
+                        <td>@s.Id</td>
+                        <td>@s.Name</td>
+                        <td>@s.Midterm</td>
+                        <td>@s.Final</td>
+                        <td><strong>@s.Grade</strong></td>
+                    </tr>
                 }
-              }
             </tbody>
-          </table>
-          <button class="buttons" id="change_table">Tabloyu Sırala</button>
-        </div>
+        </table>
+    </div>
+    <div class="alert alert-secondary mt-2">
+        Hesaplama: %40 Vize + %60 Final
+    </div>
+</section>
 
-        <div class="alert alert-secondary">
-          Calculation: 40% Midterm + 60% Final
-        </div>
+<!-- Galeri Kartı -->
+<section class="card mb-4">
+    <h2 class="card__title">Resim Galerisi</h2>
 
-        <p class="muted">
-          Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
-        </p>
-      </section>
+    <!-- JS Yöntemi: Sadece tarayıcıda önizleme, veritabanına kaydetmez -->
+    <div class="mb-3">
+        <h5>JS Yöntemi</h5>
+        <input type="file" id="jsFileInput" accept="image/*" class="form-control mb-2" style="max-width:350px;" />
+        <div id="jsPreviewArea" class="d-flex flex-wrap gap-2 mt-2"></div>
+    </div>
 
-      <div class="image_container">
-        <img src="normal.png" class="profile_image">
-      </div>
-      <button class="buttons" id="change_image">Resmi Değiştir</button>
+    <!-- C# Yöntemi: Sunucuya yükle, veritabanına kaydet -->
+    <div class="mb-3">
+        <h5>C# Yöntemi</h5>
+        <form method="post" enctype="multipart/form-data">
+            <div class="d-flex gap-2 align-items-center">
+                <input type="file" name="Upload" accept="image/*" class="form-control" style="max-width:350px;" />
+                <button asp-page-handler="Upload" class="btn btn-success">Yükle</button>
+            </div>
+        </form>
+    </div>
 
-      <footer class="footer">
-        <span>© 2026 - Web Programming</span>
-        <span class="footer__sep">•</span>
-        <a class="footer__link" href="#">Gizlilik</a>
-        <a class="footer__link" href="#">Yardım</a>
-      </footer>
-    </main>
-  </div>
-  <script src="javascript.js" defer></script>
-</body>
-</html>
+    <!-- Veritabanındaki resimler -->
+    <div class="d-flex flex-wrap gap-3 mt-3">
+        @foreach (var img in Model.GalleryImages)
+        {
+            <div class="text-center">
+                <img src="data:@img.ContentType;base64,@Convert.ToBase64String(img.Data)"
+                     style="width:120px;height:120px;object-fit:cover;border:1px solid #ccc;border-radius:6px;" />
+                <div class="text-muted" style="font-size:0.75rem;">@img.FileName</div>
+            </div>
+        }
+        @if (!Model.GalleryImages.Any())
+        {
+            <p class="text-muted">Henüz resim yüklenmedi.</p>
+        }
+    </div>
+</section>
+
+<!-- Güvenlik Analizi Kartı -->
+<section class="card mb-4">
+    <h2 class="card__title">Güvenlik Analizi</h2>
+    <div class="alert alert-warning">
+        <strong> Dosya Yükleme Kısıtlaması Eksikliği</strong>
+    </div>
+    <p>
+        <strong>Açıklama:</strong> Galeri yükleme özelliğinde sunucu tarafında yüklenen dosyanın
+        türü yalnızca <code>ContentType</code> başlığına bakılarak kontrol edilmektedir.
+        Bu başlık istemci tarafından gönderildiği için kullanıcı tarafından kolayca değiştirilebilir.
+        Örneğin bir saldırgan, <code>.exe</code> ya da <code>.cshtml</code> uzantılı bir dosyayı
+        <code>image/jpeg</code> içerik tipiyle yükleyebilir.
+    </p>
+    <p>
+        <strong>Nerede Görünür:</strong> <code>Index.cshtml.cs</code> içindeki
+        <code>OnPostUpload()</code> metodunda dosya türü doğrulaması yapılmamaktadır.
+    </p>
+    <p>
+        <strong>Olası Sonuçlar:</strong> Zararlı bir dosya sunucuya yüklenirse; sunucu tarafı
+        kod çalıştırma (Remote Code Execution), yetkisiz veri erişimi veya uygulamanın
+        ele geçirilmesi gibi kritik sonuçlar doğurabilir.
+    </p>
+    <p class="text-muted">
+        <em>Not: Bu rapor amaçlı olarak yalnızca açığı tanımlamaktadır; düzeltme uygulanmamıştır.</em>
+    </p>
+</section>
+
+@section Scripts {
+<script>
+    document.getElementById('jsFileInput').addEventListener('change', function () {
+        const previewArea = document.getElementById('jsPreviewArea');
+        previewArea.innerHTML = '';
+        const files = this.files;
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.cssText = 'width:100px;height:100px;object-fit:cover;border:1px solid #ccc;border-radius:6px;';
+                previewArea.appendChild(img);
+            };
+            reader.readAsDataURL(files[i]);
+        }
+    });
+</script>
+}
