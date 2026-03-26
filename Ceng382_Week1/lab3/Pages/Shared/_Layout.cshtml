@@ -8,32 +8,34 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lab3.styles.css" asp-append-version="true" />
+    <style>
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        .page-shell { flex: 1; }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">lab3</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
+    <header class="topbar">
+        <div class="brand">CENG Web Demo</div>
+        <nav class="topnav" aria-label="Top Menu">
+            <a class="topnav__link" asp-area="" asp-page="/Index">Home</a>
+            <a class="topnav__link" asp-area="" asp-page="/Privacy">Privacy</a>
         </nav>
+        <div class="ms-auto d-flex align-items-center">
+            <partial name="_LoginPartial" />
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="layout page-shell">
+        <aside class="sidebar" aria-label="Side Menu">
+            <h2 class="sidebar__title">Menu</h2>
+            <a class="sidebar__link is-active" href="#">Dashboard</a>
+            <a class="sidebar__link" href="#">Assignments</a>
+            <a class="sidebar__link" href="#">Resources</a>
+            <a class="sidebar__link" href="#">Schedule</a>
+            <a class="sidebar__link" href="#">Settings</a>
+        </aside>
+
+        <main role="main" class="content pb-3">
             @RenderBody()
         </main>
     </div>
