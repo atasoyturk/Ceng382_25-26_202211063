@@ -5,6 +5,10 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// database connection is configured 
+builder.Services.AddDbContext<NorthwindContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindConnection")));
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
