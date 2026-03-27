@@ -1,0 +1,18 @@
+# Build outputs
+bin/
+obj/
+
+# Database files
+*.db
+*.mdf
+*.ldf
+
+# User settings
+.vs/
+*.user
+
+# NuGet
+packages/
+
+# Secrets
+appsettings.Development.json
