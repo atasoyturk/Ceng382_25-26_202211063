@@ -33,7 +33,42 @@
                 <td>@item.City</td>
                 <td>@item.Country</td>
                 <td>@item.PostalCode</td>
+                <td>@(item.IsActive ? "Yes" : "No")</td>
+                <td>
+                    <a href = "/Home/Edit/@item.ContactInfoId" class="btn btn-sm btn-warning">Edit</a>
+                    <button class="btn btn-sm btn-danger"
+                            onclick="showDeleteModal(@item.ContactInfoId)">Delete</button>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this record?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDeleteModal(id) {
+        document.getElementById('deleteForm').action = '/Home/Delete/' + id;
+        var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+</script>
