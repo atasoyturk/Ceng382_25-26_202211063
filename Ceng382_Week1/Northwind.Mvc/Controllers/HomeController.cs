@@ -21,7 +21,7 @@ public class HomeController : Controller
     }
 
     // GET
-    public IActionResult Edit()
+    public IActionResult Edit(int id)
     {
         var item = _context.ShipperContactInfos.Find(id);
         if (item == null)

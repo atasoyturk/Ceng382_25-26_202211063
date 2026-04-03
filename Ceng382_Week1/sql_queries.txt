@@ -31,3 +31,7 @@ VALUES
 (3, 'legal@federalshipping.com', 'www.federalshipping.com/legal', '(503) 555-7777', '791 Pine Rd', 'San Francisco', 'USA', '94101'),
 (1, 'marketing@speedyexpress.com', 'www.speedyexpress.com/ads', '(503) 555-8888', '126 Main St', 'Portland', 'USA', '97201');
 GO
+
+--------------
+ALTER TABLE ShipperContactInfos
+ADD IsActive BIT NOT NULL DEFAULT 1;
