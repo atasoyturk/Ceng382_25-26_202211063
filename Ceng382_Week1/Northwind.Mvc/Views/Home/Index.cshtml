@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Northwind.Mvc.Models.ShipperContactInfo>
+
+@{
+    ViewData["Title"] = "Shipper Contact Info";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>ShipperContactInfo Table</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ContactInfoID</th>
+            <th>ShipperID</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>PostalCode</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ContactInfoId</td>
+                <td>@item.ShipperId</td>
+                <td>@item.Email</td>
+                <td>@item.Website</td>
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+                <td>@item.City</td>
+                <td>@item.Country</td>
+                <td>@item.PostalCode</td>
+            </tr>
+        }
+    </tbody>
+</table>

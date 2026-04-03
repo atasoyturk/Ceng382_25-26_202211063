@@ -6,9 +6,18 @@ namespace Northwind.Mvc.Controllers;
 
 public class HomeController : Controller
 {
+
+    private readonly NorthwindContext _context;
+
+    public HomeController(NorthwindContext context)
+    {
+        _context = context;
+    }
     public IActionResult Index()
     {
-        return View();
+        var shipperContactInfo = _context.ShipperContactInfo.ToList();
+        return View(shipperContactInfo);
+                
     }
 
     public IActionResult Privacy()
