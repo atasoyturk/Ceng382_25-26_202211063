@@ -7,14 +7,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
 
-<h2>All records</h2>
-
-<form method="post" asp-action="HardDelete" style="display:inline">
-    @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-danger mb-3">
-        <i class="bi bi-trash-fill"></i> Hard Delete)
-    </button>
-</form>
+<h2>Tüm Kayıtlar</h2>
 
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
@@ -51,7 +44,7 @@
                         <i class="bi bi-pencil-fill"></i>
                     </a>
                     <button class="btn btn-sm btn-danger"
-                            onclick="showDeleteModal(@item.ContactInfoId)">
+                            onclick="showHardDeleteModal(@item.ContactInfoId)">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -74,6 +67,8 @@
             <th>City</th>
             <th>Country</th>
             <th>PostalCode</th>
+            <th>Active</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -89,25 +84,54 @@
                 <td>@item.City</td>
                 <td>@item.Country</td>
                 <td>@item.PostalCode</td>
+                <td>@(item.IsActive ? "Yes" : "No")</td>
+                <td>
+                    <button class="btn btn-sm btn-danger"
+                            onclick="showSoftDeleteModal(@item.ContactInfoId)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-<!-- Soft Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
+<!--hard delete  -->
+<div class="modal fade" id="hardDeleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Emin misiniz?</h5>
+                <h5 class="modal-title">Are you sure?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                This record will be made passive. Do you want to continue?
+                This record will be permanently deleted from the database. Do you want to continue?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="post">
+                <form id="hardDeleteForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Soft Delete  -->
+<div class="modal fade" id="softDeleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                This record will be marked as inactive. Do you want to continue?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="softDeleteForm" method="post">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-danger">Yes</button>
                 </form>
@@ -117,9 +141,15 @@
 </div>
 
 <script>
-    function showDeleteModal(id) {
-        document.getElementById('deleteForm').action = '/Home/Delete/' + id;
-        var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    function showHardDeleteModal(id) {
+        document.getElementById('hardDeleteForm').action = '/Home/HardDelete/' + id;
+        var modal = new bootstrap.Modal(document.getElementById('hardDeleteModal'));
+        modal.show();
+    }
+
+    function showSoftDeleteModal(id) {
+        document.getElementById('softDeleteForm').action = '/Home/SoftDelete/' + id;
+        var modal = new bootstrap.Modal(document.getElementById('softDeleteModal'));
         modal.show();
     }
 </script>

@@ -6,34 +6,28 @@ namespace Northwind.Mvc.Controllers;
 
 public class HomeController : Controller
 {
-
     private readonly NorthwindContext _context;
 
     public HomeController(NorthwindContext context)
     {
         _context = context;
     }
+
     public IActionResult Index()
     {
         var all = _context.ShipperContactInfos.ToList();
         var active = all.Where(x => x.IsActive).ToList();
         ViewBag.ActiveList = active;
         return View(all);
-                
     }
 
-    // GET
     public IActionResult Edit(int id)
     {
         var item = _context.ShipperContactInfos.Find(id);
-        if (item == null)
-        {
-            return NotFound();
-        }
+        if (item == null) return NotFound();
         return View(item);
     }
 
-    // POST
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, ShipperContactInfo updated)
@@ -54,9 +48,10 @@ public class HomeController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // hard delete
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
+    public IActionResult HardDelete(int id)
     {
         var item = _context.ShipperContactInfos.Find(id);
         if (item == null) return NotFound();
@@ -66,13 +61,15 @@ public class HomeController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-     // POST Hard Delete
+    // soft delete
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult HardDelete()
+    public IActionResult SoftDelete(int id)
     {
-        var activeItems = _context.ShipperContactInfos.Where(x => x.IsActive).ToList();
-        _context.ShipperContactInfos.RemoveRange(activeItems);
+        var item = _context.ShipperContactInfos.Find(id);
+        if (item == null) return NotFound();
+
+        item.IsActive = false;
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));
     }
