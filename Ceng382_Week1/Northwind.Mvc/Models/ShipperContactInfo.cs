@@ -23,5 +23,7 @@ public partial class ShipperContactInfo
 
     public string? PostalCode { get; set; }
 
+    public bool isActive { get; set; }
+
     public virtual Shipper Shipper { get; set; } = null!;
 }

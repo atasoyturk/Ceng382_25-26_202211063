@@ -558,6 +558,7 @@ public partial class NorthwindContext : DbContext
             entity.Property(e => e.PostalCode).HasMaxLength(20);
             entity.Property(e => e.ShipperId).HasColumnName("ShipperID");
             entity.Property(e => e.Website).HasMaxLength(100);
+            entity.Property(e => e.isActive).HasColumnName("isActive");
 
             entity.HasOne(d => d.Shipper).WithMany(p => p.ShipperContactInfos)
                 .HasForeignKey(d => d.ShipperId)
