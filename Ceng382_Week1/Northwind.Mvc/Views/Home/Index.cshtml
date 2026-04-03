@@ -2,9 +2,19 @@
 
 @{
     ViewData["Title"] = "Shipper Contact Info";
+    var activeList = ViewBag.ActiveList as List<Northwind.Mvc.Models.ShipperContactInfo>;
 }
 
-<h2>ShipperContactInfo Table</h2>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+
+<h2>All records</h2>
+
+<form method="post" asp-action="HardDelete" style="display:inline">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger mb-3">
+        <i class="bi bi-trash-fill"></i> Hard Delete)
+    </button>
+</form>
 
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
@@ -19,6 +29,7 @@
             <th>Country</th>
             <th>PostalCode</th>
             <th>Active</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -36,30 +47,69 @@
                 <td>@item.PostalCode</td>
                 <td>@(item.IsActive ? "Yes" : "No")</td>
                 <td>
-                    <a href = "/Home/Edit/@item.ContactInfoId" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="/Home/Edit/@item.ContactInfoId" class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
                     <button class="btn btn-sm btn-danger"
-                            onclick="showDeleteModal(@item.ContactInfoId)">Delete</button>
+                            onclick="showDeleteModal(@item.ContactInfoId)">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+<h2 class="mt-5">Active Records</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-success">
+        <tr>
+            <th>ContactInfoID</th>
+            <th>ShipperID</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>PostalCode</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in activeList!)
+        {
+            <tr>
+                <td>@item.ContactInfoId</td>
+                <td>@item.ShipperId</td>
+                <td>@item.Email</td>
+                <td>@item.Website</td>
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+                <td>@item.City</td>
+                <td>@item.Country</td>
+                <td>@item.PostalCode</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Soft Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Are you sure?</h5>
+                <h5 class="modal-title">Emin misiniz?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this record?
+                This record will be made passive. Do you want to continue?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <form id="deleteForm" method="post">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
                 </form>
             </div>
         </div>

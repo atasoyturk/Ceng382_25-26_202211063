@@ -15,8 +15,10 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        var shipperContactInfo = _context.ShipperContactInfos.ToList();
-        return View(shipperContactInfo);
+        var all = _context.ShipperContactInfos.ToList();
+        var active = all.Where(x => x.IsActive).ToList();
+        ViewBag.ActiveList = active;
+        return View(all);
                 
     }
 
@@ -60,6 +62,17 @@ public class HomeController : Controller
         if (item == null) return NotFound();
 
         _context.ShipperContactInfos.Remove(item);
+        _context.SaveChanges();
+        return RedirectToAction(nameof(Index));
+    }
+
+     // POST Hard Delete
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult HardDelete()
+    {
+        var activeItems = _context.ShipperContactInfos.Where(x => x.IsActive).ToList();
+        _context.ShipperContactInfos.RemoveRange(activeItems);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));
     }
