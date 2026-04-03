@@ -15,7 +15,7 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        var shipperContactInfo = _context.ShipperContactInfo.ToList();
+        var shipperContactInfo = _context.ShipperContactInfos.ToList();
         return View(shipperContactInfo);
                 
     }
