@@ -28,7 +28,9 @@ else
                         </div>
                     }
                     <div class="card-body">
-                        <h5 class="card-title">@item.Name</h5>
+                        <h5 class="card-title">
+                            <a asp-action="Detail" asp-route-id="@item.ID" class="text-decoration-none text-dark">@item.Name</a>
+                        </h5>
                         <p class="card-text text-muted">@item.Description</p>
                         <span class="badge bg-danger">@item.Category</span>
                     </div>

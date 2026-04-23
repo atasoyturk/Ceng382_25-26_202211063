@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using tastemam.Data;
 
 namespace tastemam.Controllers
@@ -16,6 +17,17 @@ namespace tastemam.Controllers
         {
             var menus = _context.MenuItems.ToList();
             return View(menus);
+        }
+
+        public IActionResult Detail(int id)
+        {
+            var menu = _context.MenuItems
+                .Include(m => m.CustomizationGroups)
+                .ThenInclude(g => g.Options)
+                .FirstOrDefault(m => m.ID == id);
+
+            if (menu == null) return NotFound();
+            return View(menu);
         }
     }
 }

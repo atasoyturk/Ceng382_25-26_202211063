@@ -1,0 +1,71 @@
+@model tastemam.Models.Menu
+
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<div class="row mt-4">
+    <div class="col-md-5">
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath" class="img-fluid rounded shadow" style="width:100%; object-fit:cover;" />
+        }
+        else
+        {
+            <div style="height:300px; background:#f0f0f0;" class="d-flex align-items-center justify-content-center rounded">
+                <span class="text-muted">Resim yok</span>
+            </div>
+        }
+    </div>
+    <div class="col-md-7">
+        <h2>@Model.Name</h2>
+        <span class="badge bg-danger mb-2">@Model.Category</span>
+        <p class="text-muted">@Model.Description</p>
+        <h4 class="text-danger">@Model.Price ₺</h4>
+
+        @if (Model.CustomizationGroups != null && Model.CustomizationGroups.Any())
+        {
+            <hr />
+            <h5>Özelleştirme Seçenekleri</h5>
+
+            @foreach (var group in Model.CustomizationGroups)
+            {
+                <div class="mb-3">
+                    <h6>
+                        @group.Name
+                        <span class="badge bg-secondary ms-1" style="font-size:0.7rem;">
+                            @(group.Type == "removable" ? "Çıkarılabilir" :
+                              group.Type == "addition" ? "Ekstra" : "Gruplu Seçim")
+                        </span>
+                    </h6>
+                    <ul class="list-group">
+                        @foreach (var option in group.Options)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>
+                                    @option.Name
+                                    @if (option.IsDefault)
+                                    {
+                                        <span class="badge bg-success ms-1">Varsayılan</span>
+                                    }
+                                </span>
+                                <span class="text-muted">
+                                    @if (option.PriceModifier > 0)
+                                    {
+                                        <span class="text-danger">+@option.PriceModifier ₺</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Ücretsiz</span>
+                                    }
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        }
+
+        <a asp-action="Index" class="btn btn-outline-secondary mt-3">Geri Dön</a>
+    </div>
+</div>
