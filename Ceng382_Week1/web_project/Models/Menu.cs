@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace tastemam.Models
@@ -13,6 +14,12 @@ namespace tastemam.Models
 
         public decimal Price { get; set; }
 
-        public string Category { get; set; } 
+        public string Category { get; set; }
+
+        public string ImagePath { get; set; } 
+
+        public string CaretakerID { get; set; } // IdentityUser ID
+
+        public ICollection<CustomizationGroup> CustomizationGroups { get; set; }
     }
 }
