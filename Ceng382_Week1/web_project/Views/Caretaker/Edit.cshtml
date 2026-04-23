@@ -1,14 +1,14 @@
 @model tastemam.Models.Menu
 
 @{
-    ViewData["Title"] = "Yeni Menü Ekle";
+    ViewData["Title"] = "Menü Düzenle";
 }
 
 <div class="row justify-content-center mt-4">
     <div class="col-md-6">
-        <h2 class="mb-4">Yeni Menü Ekle</h2>
+        <h2 class="mb-4">Menü Düzenle</h2>
 
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <form asp-action="Edit" asp-route-id="@Model.ID" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
             <div class="mb-3">
@@ -40,11 +40,23 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Resim</label>
+                <label class="form-label">Mevcut Resim</label><br />
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@Model.ImagePath" width="120" height="90" style="object-fit:cover;" class="mb-2" />
+                }
+                else
+                {
+                    <span class="text-muted">Resim yok</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Yeni Resim (opsiyonel)</label>
                 <input type="file" name="imageFile" class="form-control" accept="image/*" />
             </div>
 
-            <button type="submit" class="btn btn-danger w-100">Kaydet</button>
+            <button type="submit" class="btn btn-danger w-100">Güncelle</button>
             <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-2">İptal</a>
         </form>
     </div>

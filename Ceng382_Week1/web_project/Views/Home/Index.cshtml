@@ -17,6 +17,16 @@ else
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
+                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                    {
+                        <img src="@item.ImagePath" class="card-img-top" style="height:200px; object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div style="height:200px; background:#f0f0f0;" class="d-flex align-items-center justify-content-center">
+                            <span class="text-muted">Resim yok</span>
+                        </div>
+                    }
                     <div class="card-body">
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text text-muted">@item.Description</p>
@@ -24,6 +34,10 @@ else
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <strong>@item.Price ₺</strong>
+                        @if (!string.IsNullOrEmpty(item.CaretakerID))
+                        {
+                            <small class="text-muted"><i class="fas fa-user me-1"></i>@item.CaretakerID</small>
+                        }
                     </div>
                 </div>
             </div>
