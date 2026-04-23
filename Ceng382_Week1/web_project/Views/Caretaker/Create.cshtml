@@ -1,0 +1,49 @@
+@model tastemam.Models.Menu
+
+@{
+    ViewData["Title"] = "Yeni Menü Ekle";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2 class="mb-4">Yeni Menü Ekle</h2>
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Menü Adı</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Açıklama</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">Fiyat</label>
+                <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Category" class="form-label">Kategori</label>
+                <select asp-for="Category" class="form-select">
+                    <option value="">-Seçiniz-</option>
+                    <option value="Düğün">Düğün</option>
+                    <option value="Kurumsal">Kurumsal</option>
+                    <option value="Özel Gün">Özel Gün</option>
+                    <option value="Mezuniyet">Mezuniyet</option>
+                    <option value="Kokteyl">Kokteyl</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Kaydet</button>
+            <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-2">İptal</a>
+        </form>
+    </div>
+</div>

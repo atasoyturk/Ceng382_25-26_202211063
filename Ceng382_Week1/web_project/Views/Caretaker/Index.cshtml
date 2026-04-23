@@ -1,0 +1,39 @@
+@model IEnumerable<tastemam.Models.Menu>
+
+@{
+    ViewData["Title"] = "Menü Yönetimi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Menü Yönetimi</h2>
+    <a asp-action="Create" class="btn btn-danger">+ Yeni Menü Ekle</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p>Henüz menü eklenmemiş.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>Açıklama</th>
+                <th>Fiyat</th>
+                <th>Kategori</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price ₺</td>
+                    <td>@item.Category</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
