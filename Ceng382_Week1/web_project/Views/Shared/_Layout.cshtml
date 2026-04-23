@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - tastemam</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- i used Font Awesome for the icons-->
+</head>
+<body>
+
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg tm-navbar">
+        <div class="container">
+            <a class="navbar-brand tm-brand" href="/">
+                <span class="tm-brand-taste">tastemam</span>
+
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Menu"><i class="fas fa-utensils me-1"></i>Menü</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Hizmetler"><i class="fas fa-concierge-bell me-1"></i>Hizmetler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Contact"><i class="fas fa-envelope me-1"></i>İletişim</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link tm-siparis-btn" href="/Order"><i class="fas fa-shopping-basket me-1"></i>Sipariş Ver</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- container -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- left bar -->
+            <div class="col-lg-2 tm-sidebar d-none d-lg-block">
+                <div class="tm-sidebar-inner">
+                    <h6 class="tm-sidebar-title">Kategoriler</h6>
+                    <ul class="tm-sidebar-list">
+                        <li><a href="#"><i class="fas fa-rings-wedding me-2"></i>Düğün</a></li>
+                        <li><a href="#"><i class="fas fa-briefcase me-2"></i>Kurumsal</a></li>
+                        <li><a href="#"><i class="fas fa-birthday-cake me-2"></i>Özel Gün</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap me-2"></i>Mezuniyet</a></li>
+                        <li><a href="#"><i class="fas fa-cocktail me-2"></i>Kokteyl</a></li>
+                    </ul>
+                    <hr class="tm-sidebar-divider" />
+                    <h6 class="tm-sidebar-title">Hızlı Erişim</h6>
+                    <ul class="tm-sidebar-list">
+                        <li><a href="/Order"><i class="fas fa-plus-circle me-2"></i>Sipariş Ver</a></li>
+                        <li><a href="/Contact"><i class="fas fa-phone me-2"></i>Bize Ulaşın</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- page content -->
+            <div class="col-lg-10 tm-main-content">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="tm-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="tm-footer-brand">
+                        <span class="tm-brand-taste">taste</span><span class="tm-brand-mam">mam</span>
+                    </h5>
+                    <p>Özel anlarınız için her şey tastemam</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Hızlı Linkler</h6>
+                    <ul class="tm-footer-links">
+                        <li><a href="/">Ana Sayfa</a></li>
+                        <li><a href="/Menu">Menü</a></li>
+                        <li><a href="/Contact">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>İletişim</h6>
+                    <p><i class="fas fa-phone me-2"></i>+905347977973</p>
+                    <p><i class="fas fa-envelope me-2"></i>info@tastemam.com</p>
+                    <div class="tm-social">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <p class="text-center tm-copyright">© 2026 tastemam. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
