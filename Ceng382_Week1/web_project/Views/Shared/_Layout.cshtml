@@ -36,9 +36,38 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/Contact"><i class="fas fa-envelope me-1"></i>İletişim</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link tm-siparis-btn" href="/Order"><i class="fas fa-shopping-basket me-1"></i>Sipariş Ver</a>
-                    </li>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin") || User.IsInRole("Caretaker"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Caretaker" asp-action="Index">
+                                    <i class="fas fa-utensils me-1"></i>Menü Yönetimi
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <i class="fas fa-sign-out-alt me-1"></i>Çıkış Yap
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                <i class="fas fa-sign-in-alt me-1"></i>Giriş Yap
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link tm-siparis-btn" asp-controller="Account" asp-action="Register">
+                                <i class="fas fa-user-plus me-1"></i>Kayıt Ol
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
