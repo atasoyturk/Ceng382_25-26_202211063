@@ -46,6 +46,7 @@ else
                     <td>@item.Category</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-warning">Düzenle</a>
+                        <a asp-action="Customize" asp-route-id="@item.ID" class="btn btn-sm btn-secondary">Özelleştir</a>
                         <form asp-action="Delete" asp-route-id="@item.ID" method="post" class="d-inline"
                               onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
                             <button type="submit" class="btn btn-sm btn-danger">Sil</button>

@@ -1,0 +1,115 @@
+@model tastemam.Models.Menu
+
+@{
+    ViewData["Title"] = "Özelleştirme Yönetimi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>@Model.Name — Özelleştirme</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Geri Dön</a>
+</div>
+
+<!-- YENİ GROUP EKLE -->
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">Yeni Özelleştirme Grubu Ekle</div>
+    <div class="card-body">
+        <form asp-action="AddGroup" method="post" class="row g-3">
+            <input type="hidden" name="menuId" value="@Model.ID" />
+            <div class="col-md-5">
+                <input type="text" name="groupName" class="form-control" placeholder="Grup Adı (örn: Soslar)" required />
+            </div>
+            <div class="col-md-4">
+                <select name="groupType" class="form-select">
+                    <option value="removable">Çıkarılabilir Malzeme</option>
+                    <option value="addition">Ekstra Ekleme</option>
+                    <option value="grouped">Gruplu Seçim</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-danger w-100">Grup Ekle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MEVCUT GRUPLAR -->
+@if (Model.CustomizationGroups != null && Model.CustomizationGroups.Any())
+{
+    @foreach (var group in Model.CustomizationGroups)
+    {
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>
+                    <strong>@group.Name</strong>
+                    <span class="badge bg-secondary ms-2">@group.Type</span>
+                </span>
+                <form asp-action="DeleteGroup" method="post" class="d-inline"
+                      onsubmit="return confirm('Grubu silmek istiyor musunuz?')">
+                    <input type="hidden" name="groupId" value="@group.ID" />
+                    <input type="hidden" name="menuId" value="@Model.ID" />
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Grubu Sil</button>
+                </form>
+            </div>
+            <div class="card-body">
+
+                <!-- MEVCUT OPTIONLAR -->
+                @if (group.Options != null && group.Options.Any())
+                {
+                    <table class="table table-sm mb-3">
+                        <thead>
+                            <tr>
+                                <th>Seçenek</th>
+                                <th>Fiyat Farkı</th>
+                                <th>Varsayılan</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var option in group.Options)
+                            {
+                                <tr>
+                                    <td>@option.Name</td>
+                                    <td>@option.PriceModifier ₺</td>
+                                    <td>@(option.IsDefault ? "Evet" : "Hayır")</td>
+                                    <td>
+                                        <form asp-action="DeleteOption" method="post" class="d-inline">
+                                            <input type="hidden" name="optionId" value="@option.ID" />
+                                            <input type="hidden" name="menuId" value="@Model.ID" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <!-- YENİ OPTION EKLE -->
+                <form asp-action="AddOption" method="post" class="row g-2">
+                    <input type="hidden" name="groupId" value="@group.ID" />
+                    <input type="hidden" name="menuId" value="@Model.ID" />
+                    <div class="col-md-4">
+                        <input type="text" name="optionName" class="form-control form-control-sm" placeholder="Seçenek Adı" required />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="priceModifier" class="form-control form-control-sm" placeholder="Fiyat Farkı (₺)" step="0.01" value="0" />
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center">
+                        <div class="form-check">
+                            <input type="checkbox" name="isDefault" value="true" class="form-check-input" id="default_@group.ID" />
+                            <label class="form-check-label" for="default_@group.ID">Varsayılan</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-sm btn-danger w-100">Ekle</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="text-muted">Henüz özelleştirme grubu eklenmemiş.</p>
+}
