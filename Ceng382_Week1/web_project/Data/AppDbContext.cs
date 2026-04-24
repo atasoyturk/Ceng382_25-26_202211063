@@ -13,8 +13,26 @@ namespace tastemam.Data
         public DbSet<Menu> MenuItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<OrderItemCustomization> OrderItemCustomizations { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<CustomizationGroup> CustomizationGroups { get; set; }
         public DbSet<CustomizationOption> CustomizationOptions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OrderItemCustomization>()
+                .HasOne(o => o.OrderItem)
+                .WithMany(i => i.SelectedCustomizations)
+                .HasForeignKey(o => o.OrderItemID)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<OrderItemCustomization>()
+                .HasOne(o => o.CustomizationOption)
+                .WithMany()
+                .HasForeignKey(o => o.CustomizationOptionID)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

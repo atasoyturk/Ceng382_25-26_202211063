@@ -18,8 +18,10 @@ namespace tastemam.Models
 
         public decimal TotalPrice { get; set; }
 
-        public string State { get; set; } // waiting - accepted etc.
+        public string State { get; set; } // pending, completed
 
-        public ICollection<OrderItem> OrderItems{ get; set; }
+        public string UserID { get; set; } // IdentityUser ID
+
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }
