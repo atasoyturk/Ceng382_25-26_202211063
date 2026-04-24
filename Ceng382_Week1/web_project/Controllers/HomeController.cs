@@ -13,12 +13,18 @@ namespace tastemam.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string kategori = null)
         {
-            var menus = _context.MenuItems.ToList();
-            return View(menus);
-        }
+            var menus = _context.MenuItems.AsQueryable();
 
+            if (!string.IsNullOrEmpty(kategori))
+                menus = menus.Where(m => m.Category == kategori);
+            else
+                menus = menus.Take(0);
+
+            ViewData["Kategori"] = kategori;
+            return View(menus.ToList());
+        }
         public IActionResult Detail(int id)
         {
             var menu = _context.MenuItems

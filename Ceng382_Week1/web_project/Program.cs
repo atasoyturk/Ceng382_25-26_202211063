@@ -48,7 +48,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -56,11 +55,72 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
     string[] roles = { "Admin", "Caretaker", "User" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    if (await userManager.FindByEmailAsync("atasoyturkk@tastemam.com") == null)
+    {
+        var admin = new IdentityUser { UserName = "atasoyturkk@tastemam.com", Email = "atasoyturkk@tastemam.com" };
+        await userManager.CreateAsync(admin, "adminata");
+        await userManager.AddToRoleAsync(admin, "Admin");
+    }
+
+    if (await userManager.FindByEmailAsync("efenayin@tastemam.com") == null)
+    {
+        var caretaker = new IdentityUser { UserName = "efenayin@tastemam.com", Email = "efenayin@tastemam.com" };
+        await userManager.CreateAsync(caretaker, "caretakerefe");
+        await userManager.AddToRoleAsync(caretaker, "Caretaker");
+    }
+
+    if (await userManager.FindByEmailAsync("dogand@tastemam.com") == null)
+    {
+        var user = new IdentityUser { UserName = "dogand@tastemam.com", Email = "dogand@tastemam.com" };
+        await userManager.CreateAsync(user, "userdogan");
+        await userManager.AddToRoleAsync(user, "User");
+    }
+
+    if (!context.MenuItems.Any())
+    {
+        var caretaker = await userManager.FindByEmailAsync("efenayin@tastemam.com");
+        context.MenuItems.AddRange(
+            new tastemam.Models.Menu
+            {
+                Name = "Düğün Menüsü Klasik",
+                Description = "Çorba, ana yemek, tatlı ve içecek dahil komple düğün menüsü.",
+                Price = 350,
+                Category = "Düğün",
+                CaretakerID = caretaker.Id,
+                ImagePath = ""
+
+            },
+            new tastemam.Models.Menu
+            {
+                Name = "Kurumsal Toplantı Menüsü",
+                Description = "Sandviç, meyve tabağı, çay ve kahve dahil hafif kurumsal menü.",
+                Price = 150,
+                Category = "Kurumsal",
+                CaretakerID = caretaker.Id,
+                ImagePath = ""
+
+            },
+            new tastemam.Models.Menu
+            {
+                Name = "Doğum Günü Özel Menü",
+                Description = "Pasta, atıştırmalıklar ve içecekler dahil eğlenceli doğum günü menüsü.",
+                Price = 200,
+                Category = "Özel Gün",
+                CaretakerID = caretaker.Id,
+                ImagePath = ""
+            }
+        );
+        await context.SaveChangesAsync();
     }
 }
 

@@ -1,48 +1,56 @@
-﻿@model IEnumerable<tastemam.Models.Menu>
-
-@{
+﻿@{
     ViewData["Title"] = "Ana Sayfa";
+    var kategori = ViewData["Kategori"] as string;
 }
 
-<h2 class="mb-4">Mevcut Menüler</h2>
-
-@if (!Model.Any())
+@if (string.IsNullOrEmpty(kategori))
 {
-    <p>Henüz menü eklenmemiş.</p>
+    <div style="padding: 60px 20px;">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">TasteMam</h1>
+        <p style="font-size: 1.1rem; color: #555; max-width: 500px; margin-top: 15px;">
+            Düğünden kurumsal etkinliklere, özel günlere kadar her organizasyonunuz için
+            profesyonel catering hizmeti.
+        </p>
+        <p style="color: #888; margin-top: 30px;">Menüleri görmek için sol taraftan bir kategori seçin.</p>
+    </div>
 }
 else
 {
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    @if (!string.IsNullOrEmpty(item.ImagePath))
-                    {
-                        <img src="@item.ImagePath" class="card-img-top" style="height:200px; object-fit:cover;" />
-                    }
-                    else
-                    {
-                        <div style="height:200px; background:#f0f0f0;" class="d-flex align-items-center justify-content-center">
-                            <span class="text-muted">Resim yok</span>
-                        </div>
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a asp-action="Detail" asp-route-id="@item.ID" class="text-decoration-none text-dark">@item.Name</a>
-                        </h5>
-                        <p class="card-text text-muted">@item.Description</p>
-                        <span class="badge bg-danger">@item.Category</span>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between align-items-center">
-                        <strong>@item.Price ₺</strong>
-                        @if (!string.IsNullOrEmpty(item.CaretakerID))
+    <h4 style="margin-bottom: 25px; font-family: 'Playfair Display', serif;">@kategori</h4>
+
+    @if (!Model.Any())
+    {
+        <p class="text-muted">Bu kategoride henüz menü bulunmuyor.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
                         {
-                            <small class="text-muted"><i class="fas fa-user me-1"></i>@item.CaretakerID</small>
+                            <img src="@item.ImagePath" class="card-img-top" style="height:200px; object-fit:cover;" />
                         }
+                        else
+                        {
+                            <div style="height:200px; background:#f0f0f0;" class="d-flex align-items-center justify-content-center">
+                                <span class="text-muted">Resim yok</span>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a asp-action="Detail" asp-route-id="@item.ID" class="text-decoration-none text-dark">@item.Name</a>
+                            </h5>
+                            <p class="card-text text-muted">@item.Description</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <strong>@item.Price ₺</strong>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 }
