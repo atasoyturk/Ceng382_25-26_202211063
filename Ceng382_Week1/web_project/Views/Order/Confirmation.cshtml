@@ -1,0 +1,18 @@
+@model tastemam.Models.Order
+
+@{
+    ViewData["Title"] = "Sipariş Onayı";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+        <h2 class="mt-3">Siparişiniz Alındı!</h2>
+        <p class="text-muted">Sipariş numaranız: <strong>#@Model.ID</strong></p>
+        <p>Toplam Tutar: <strong class="text-danger">@Model.TotalPrice ₺</strong></p>
+        <p>Durum: <span class="badge bg-warning">@Model.State</span></p>
+        <p class="text-muted">@Model.Date.ToString("dd.MM.yyyy HH:mm")</p>
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-danger mt-3">Ana Sayfaya Dön</a>
+    </div>
+</div>

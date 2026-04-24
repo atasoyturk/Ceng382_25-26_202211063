@@ -1,0 +1,58 @@
+@model List<tastemam.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Ödeme";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2 class="mb-4">Ödeme Bilgileri</h2>
+
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">Sipariş Özeti</div>
+            <div class="card-body">
+                @foreach (var item in Model)
+                {
+                    <div class="d-flex justify-content-between">
+                        <span>@item.MenuName x@item.Quantity</span>
+                        <span>@item.TotalPrice ₺</span>
+                    </div>
+                }
+                <hr />
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Toplam</span>
+                    <span class="text-danger">@Model.Sum(i => i.TotalPrice) ₺</span>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="CompleteOrder" method="post">
+            <div class="mb-3">
+                <label class="form-label">Kart Üzerindeki İsim</label>
+                <input type="text" name="cardHolder" class="form-control" placeholder="Ad Soyad" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Kart Numarası</label>
+                <input type="text" name="cardNumber" class="form-control" placeholder="0000 0000 0000 0000"
+                       maxlength="19" required />
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Son Kullanma Tarihi</label>
+                    <input type="text" name="expiryDate" class="form-control" placeholder="AA/YY"
+                           maxlength="5" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">CVV</label>
+                    <input type="text" name="cvv" class="form-control" placeholder="000"
+                           maxlength="3" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Siparişi Tamamla</button>
+            <a asp-action="Checkout" class="btn btn-outline-secondary w-100 mt-2">Geri Dön</a>
+        </form>
+    </div>
+</div>

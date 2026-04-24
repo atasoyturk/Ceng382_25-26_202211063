@@ -1,0 +1,56 @@
+@model List<tastemam.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Sipariş Özeti";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2 class="mb-4">Sipariş Özeti</h2>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Seçenekler</th>
+                    <th>Adet</th>
+                    <th>Toplam</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MenuName</td>
+                        <td>
+                            @if (item.SelectedOptions.Any())
+                            {
+                                <ul class="mb-0 ps-3">
+                                    @foreach (var opt in item.SelectedOptions)
+                                    {
+                                        <li>@opt.OptionName @(opt.PriceModifier > 0 ? $"(+{opt.PriceModifier}₺)" : "")</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Yok</span>
+                            }
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>@item.TotalPrice ₺</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="text-end mb-4">
+            <h4>Genel Toplam: <span class="text-danger">@Model.Sum(i => i.TotalPrice) ₺</span></h4>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">Sepete Dön</a>
+            <a asp-controller="Order" asp-action="Payment" class="btn btn-danger">Ödemeye Geç</a>
+        </div>
+    </div>
+</div>
