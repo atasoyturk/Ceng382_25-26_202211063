@@ -1,56 +1,71 @@
-﻿@{
+﻿@model List<tastemam.Models.Menu>
+
+@{
     ViewData["Title"] = "Ana Sayfa";
     var kategori = ViewData["Kategori"] as string;
 }
 
-@if (string.IsNullOrEmpty(kategori))
-{
-    <div style="padding: 60px 20px;">
-        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">TasteMam</h1>
-        <p style="font-size: 1.1rem; color: #555; max-width: 500px; margin-top: 15px;">
-            Düğünden kurumsal etkinliklere, özel günlere kadar her organizasyonunuz için
-            profesyonel catering hizmeti.
-        </p>
-        <p style="color: #888; margin-top: 30px;">Menüleri görmek için sol taraftan bir kategori seçin.</p>
-    </div>
-}
-else
-{
-    <h4 style="margin-bottom: 25px; font-family: 'Playfair Display', serif;">@kategori</h4>
-
-    @if (!Model.Any())
+<div class="container fade-in-up">
+    @if (string.IsNullOrEmpty(kategori))
     {
-        <p class="text-muted">Bu kategoride henüz menü bulunmuyor.</p>
+        <div class="hero-section text-center">
+            <p class="hero-subtitle">Catering & Organizasyon</p>
+            <h1 class="hero-title">Her özel an için<br />rafine lezzetler.</h1>
+            <p class="hero-text">
+                Düğünden kurumsal etkinliklere kadar, profesyonel dokunuşlarla 
+                hazırlanmış özel menü seçeneklerimizi keşfedin.
+            </p>
+            <div class="hero-divider"></div>
+            <p class="hero-hint"><i class="fas fa-arrow-left me-2"></i> Başlamak için bir kategori seçin</p>
+        </div>
     }
     else
     {
-        <div class="row">
-            @foreach (var item in Model)
-            {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        @if (!string.IsNullOrEmpty(item.ImagePath))
-                        {
-                            <img src="@item.ImagePath" class="card-img-top" style="height:200px; object-fit:cover;" />
-                        }
-                        else
-                        {
-                            <div style="height:200px; background:#f0f0f0;" class="d-flex align-items-center justify-content-center">
-                                <span class="text-muted">Resim yok</span>
+        <div class="category-header">
+            <p class="hero-subtitle">Menüler</p>
+            <h2 class="hero-title">@kategori</h2>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state text-center py-5">
+                <p class="text-muted">Bu kategoride henüz bir menü bulunmuyor.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4"> 
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="menu-card h-100">
+                            <div class="menu-image-wrapper">
+                                @if (!string.IsNullOrEmpty(item.ImagePath))
+                                {
+                                    <img src="@item.ImagePath" alt="@item.Name" class="menu-image" />
+                                }
+                                else
+                                {
+                                    <div class="menu-image-placeholder">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                }
                             </div>
-                        }
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a asp-action="Detail" asp-route-id="@item.ID" class="text-decoration-none text-dark">@item.Name</a>
-                            </h5>
-                            <p class="card-text text-muted">@item.Description</p>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between align-items-center">
-                            <strong>@item.Price ₺</strong>
+                            
+                            <div class="menu-card-body">
+                                <span class="card-badge">Özel Seçim</span>
+                                <h5 class="card-title">
+                                    <a asp-action="Detail" asp-route-id="@item.ID">@item.Name</a>
+                                </h5>
+                                <p class="card-description">@item.Description</p>
+                                <div class="card-footer-price">
+                                    <strong>@item.Price ₺</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
     }
-}
+</div>
