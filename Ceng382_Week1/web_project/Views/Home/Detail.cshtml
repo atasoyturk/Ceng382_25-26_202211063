@@ -66,6 +66,42 @@
             }
         }
 
-        <a asp-action="Index" class="btn btn-outline-secondary mt-3">Geri Dön</a>
+        <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
+            <input type="hidden" name="menuId" value="@Model.ID" />
+            <input type="hidden" name="quantity" value="1" />
+
+            @if (Model.CustomizationGroups != null && Model.CustomizationGroups.Any())
+            {
+                @foreach (var group in Model.CustomizationGroups)
+                {
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">@group.Name</label>
+                        @foreach (var option in group.Options)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox" name="selectedOptionIds" value="@option.ID"
+                                    class="form-check-input"
+                                    @(option.IsDefault ? "checked" : "") />
+                                <label class="form-check-label">
+                                    @option.Name
+                                    @if (option.PriceModifier > 0)
+                                    {
+                                        <span class="text-danger">(+@option.PriceModifier ₺)</span>
+                                    }
+                                </label>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+
+            <div class="mb-3">
+                <label class="form-label">Adet</label>
+                <input type="number" name="quantity" value="1" min="1" class="form-control" style="width:100px;" />
+            </div>
+
+            <button type="submit" class="btn btn-danger">Sepete Ekle</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Geri Dön</a>
+        </form>
     </div>
 </div>

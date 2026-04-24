@@ -1,0 +1,70 @@
+@model List<tastemam.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Sepetim";
+}
+
+<h2 class="mb-4">Sepetim</h2>
+
+@if (!Model.Any())
+{
+    <p>Sepetiniz boş. <a asp-controller="Home" asp-action="Index">Menüye dön</a></p>
+}
+else
+{
+    <table class="table table-bordered align-middle">
+        <thead>
+            <tr>
+                <th>Ürün</th>
+                <th>Seçenekler</th>
+                <th>Birim Fiyat</th>
+                <th>Adet</th>
+                <th>Toplam</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MenuName</td>
+                    <td>
+                        @if (item.SelectedOptions.Any())
+                        {
+                            <ul class="mb-0 ps-3">
+                                @foreach (var opt in item.SelectedOptions)
+                                {
+                                    <li>@opt.OptionName @(opt.PriceModifier > 0 ? $"(+{opt.PriceModifier}₺)" : "")</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Yok</span>
+                        }
+                    </td>
+                    <td>@item.UnitPrice ₺</td>
+                    <td>
+                        <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center gap-2">
+                            <input type="hidden" name="menuId" value="@item.MenuID" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm" style="width:70px;" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Güncelle</button>
+                        </form>
+                    </td>
+                    <td>@item.TotalPrice ₺</td>
+                    <td>
+                        <form asp-action="Remove" method="post">
+                            <input type="hidden" name="menuId" value="@item.MenuID" />
+                            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h4>Genel Toplam: <span class="text-danger">@Model.Sum(i => i.TotalPrice) ₺</span></h4>
+        <a asp-controller="Order" asp-action="Checkout" class="btn btn-danger mt-2">Ödemeye Geç</a>
+    </div>
+}
