@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using tastemam.Models;
+using tastemam.Services;
 
 namespace tastemam.Controllers
 {
@@ -9,23 +10,21 @@ namespace tastemam.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly LogService _logService;
 
         public AccountController(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            LogService logService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _logService = logService;
         }
 
-        // GET: /Account/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
-        // POST: /Account/Register
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -38,6 +37,7 @@ namespace tastemam.Controllers
             {
                 await _userManager.AddToRoleAsync(user, "User");
                 await _signInManager.SignInAsync(user, isPersistent: false);
+                await _logService.LogAsync("Auth", $"new user registered.", model.Email);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -47,13 +47,8 @@ namespace tastemam.Controllers
             return View(model);
         }
 
-        // GET: /Account/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
+        public IActionResult Login() => View();
 
-        // POST: /Account/Login
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -64,6 +59,7 @@ namespace tastemam.Controllers
 
             if (result.Succeeded)
             {
+                await _logService.LogAsync("Auth", $"user login.", model.Email);
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var roles = await _userManager.GetRolesAsync(user);
 
@@ -73,21 +69,20 @@ namespace tastemam.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError("", "Geçersiz e-posta veya şifre.");
+            await _logService.LogAsync("Auth", $"invalid login try.", model.Email, "Warning");
+            ModelState.AddModelError("", "Invalid email or password.");
             return View(model);
         }
 
-        // POST: /Account/Logout
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            var email = User.Identity.Name;
             await _signInManager.SignOutAsync();
+            await _logService.LogAsync("Auth", "user logged out.", email);
             return RedirectToAction("Login");
         }
 
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+        public IActionResult AccessDenied() => View();
     }
 }

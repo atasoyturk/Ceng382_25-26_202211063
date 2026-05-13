@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using tastemam.Data;
 using tastemam.Models;
+using tastemam.Services;
 
 namespace tastemam.Controllers
 {
@@ -12,12 +13,14 @@ namespace tastemam.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LogService _logService;
         private const string CartKey = "Cart";
 
-        public OrderController(AppDbContext context, UserManager<IdentityUser> userManager)
+        public OrderController(AppDbContext context, UserManager<IdentityUser> userManager, LogService logService)
         {
             _context = context;
             _userManager = userManager;
+            _logService = logService;
         }
 
         private List<CartItem> GetCart()
@@ -26,7 +29,6 @@ namespace tastemam.Controllers
             return json == null ? new List<CartItem>() : JsonSerializer.Deserialize<List<CartItem>>(json);
         }
 
-        // GET: /Order/Checkout
         public IActionResult Checkout()
         {
             var cart = GetCart();
@@ -34,7 +36,6 @@ namespace tastemam.Controllers
             return View(cart);
         }
 
-        // GET: /Order/Payment
         public IActionResult Payment()
         {
             var cart = GetCart();
@@ -42,7 +43,6 @@ namespace tastemam.Controllers
             return View(cart);
         }
 
-        // POST: /Order/CompleteOrder
         [HttpPost]
         public async Task<IActionResult> CompleteOrder(string cardNumber, string cardHolder, string expiryDate, string cvv)
         {
@@ -80,12 +80,14 @@ namespace tastemam.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
+            await _logService.LogAsync("Order", $"Sipariş oluşturuldu. Sipariş ID: {order.ID}, Toplam: {order.TotalPrice}₺", user.Email);
+            await _logService.LogAsync("Payment", $"Ödeme tamamlandı. Sipariş ID: {order.ID}, Tutar: {order.TotalPrice}₺", user.Email);
+
             HttpContext.Session.Remove(CartKey);
 
             return RedirectToAction("Confirmation", new { id = order.ID });
         }
 
-        // GET: /Order/Confirmation
         public IActionResult Confirmation(int id)
         {
             var order = _context.Orders.Find(id);

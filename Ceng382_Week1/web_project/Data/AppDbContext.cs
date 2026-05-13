@@ -17,6 +17,7 @@ namespace tastemam.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<CustomizationGroup> CustomizationGroups { get; set; }
         public DbSet<CustomizationOption> CustomizationOptions { get; set; }
+        public DbSet<SystemLog> SystemLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
