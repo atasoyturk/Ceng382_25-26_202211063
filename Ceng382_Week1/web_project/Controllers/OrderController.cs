@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using tastemam.Data;
 using tastemam.Models;
@@ -14,13 +15,15 @@ namespace tastemam.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly LogService _logService;
+        private readonly EmailService _emailService;
         private const string CartKey = "Cart";
 
-        public OrderController(AppDbContext context, UserManager<IdentityUser> userManager, LogService logService)
+        public OrderController(AppDbContext context, UserManager<IdentityUser> userManager, LogService logService, EmailService emailService)
         {
             _context = context;
             _userManager = userManager;
             _logService = logService;
+            _emailService = emailService;
         }
 
         private List<CartItem> GetCart()
@@ -80,11 +83,39 @@ namespace tastemam.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            await _logService.LogAsync("Order", $"Sipariş oluşturuldu. Sipariş ID: {order.ID}, Toplam: {order.TotalPrice}₺", user.Email);
+            await _logService.LogAsync("Order", $"Sipariş oluşturuldu. ID: {order.ID}, Toplam: {order.TotalPrice}₺", user.Email);
             await _logService.LogAsync("Payment", $"Ödeme tamamlandı. Sipariş ID: {order.ID}, Tutar: {order.TotalPrice}₺", user.Email);
 
-            HttpContext.Session.Remove(CartKey);
+            // Email gönder
+            var itemsSummary = string.Join("\n", cart.Select(i => $"{i.MenuName} x{i.Quantity} = {i.TotalPrice}₺"));
+            try
+            {
+                await _emailService.SendOrderConfirmationAsync(user.Email, order.ID, order.TotalPrice, itemsSummary);
 
+                // Caretaker'a bildirim gönder
+                var caretakerIds = cart.Select(i => i.MenuID).Distinct().ToList();
+                var menus = _context.MenuItems.Where(m => caretakerIds.Contains(m.ID)).ToList();
+                var caretakerEmails = new HashSet<string>();
+
+                foreach (var menu in menus)
+                {
+                    if (!string.IsNullOrEmpty(menu.CaretakerID))
+                    {
+                        var caretaker = await _userManager.FindByIdAsync(menu.CaretakerID);
+                        if (caretaker != null && !caretakerEmails.Contains(caretaker.Email))
+                        {
+                            caretakerEmails.Add(caretaker.Email);
+                            await _emailService.SendOrderNotificationToCaretakerAsync(caretaker.Email, order.ID, user.Email, order.TotalPrice);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogAsync("Error", $"Email gönderilemedi: {ex.Message}", user.Email, "Error");
+            }
+
+            HttpContext.Session.Remove(CartKey);
             return RedirectToAction("Confirmation", new { id = order.ID });
         }
 
