@@ -47,6 +47,14 @@
                                 </a>
                             </li>
                         }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Logs">
+                                    <i class="fas fa-list-alt me-1"></i>Sistem Logları
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 <button type="submit" class="nav-link btn btn-link">

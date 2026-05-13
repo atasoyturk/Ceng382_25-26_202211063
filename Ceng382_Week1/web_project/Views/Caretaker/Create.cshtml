@@ -43,9 +43,31 @@
                 <label class="form-label">Resim</label>
                 <input type="file" name="imageFile" class="form-control" accept="image/*" />
             </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Konum (Opsiyonel)</label>
+                <button type="button" class="btn btn-outline-secondary btn-sm mb-2" onclick="getCaretakerLocation()">
+                    <i class="fas fa-map-marker-alt me-1"></i> Konumumu Kullan
+                </button>
+                <input type="number" step="any" asp-for="Latitude" class="form-control mb-2" placeholder="Enlem (örn: 39.9208)" />
+                <input type="number" step="any" asp-for="Longitude" class="form-control" placeholder="Boylam (örn: 32.8541)" />
+            </div>
 
             <button type="submit" class="btn btn-danger w-100">Kaydet</button>
             <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-2">İptal</a>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function getCaretakerLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.querySelector('input[name="Latitude"]').value = position.coords.latitude;
+                    document.querySelector('input[name="Longitude"]').value = position.coords.longitude;
+                });
+            }
+        }
+    </script>
+}

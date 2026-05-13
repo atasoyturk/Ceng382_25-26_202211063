@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Ana Sayfa";
     var kategori = ViewData["Kategori"] as string;
+    var mapsApiKey = ViewData["MapsApiKey"] as string;
+    var lat = ViewData["Lat"];
+    var lng = ViewData["Lng"];
 }
 
 <div class="container fade-in-up">
@@ -12,7 +15,7 @@
             <p class="hero-subtitle">Catering & Organizasyon</p>
             <h1 class="hero-title">Her özel an için<br />rafine lezzetler.</h1>
             <p class="hero-text">
-                Düğünden kurumsal etkinliklere kadar, profesyonel dokunuşlarla 
+                Düğünden kurumsal etkinliklere kadar, profesyonel dokunuşlarla
                 hazırlanmış özel menü seçeneklerimizi keşfedin.
             </p>
             <div class="hero-divider"></div>
@@ -26,6 +29,26 @@
             <h2 class="hero-title">@kategori</h2>
         </div>
 
+        <!-- KONUM FİLTRESİ -->
+        <div class="mb-4 p-3" style="background:#f9f9f9; border-radius:8px; border-left: 3px solid #C9A84C;">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <button class="btn btn-sm btn-outline-danger" onclick="getLocation()">
+                    <i class="fas fa-map-marker-alt me-1"></i> Konumuma Göre Filtrele
+                </button>
+                <select id="radiusSelect" class="form-select form-select-sm" style="width:150px;">
+                    <option value="10">10 km</option>
+                    <option value="25">25 km</option>
+                    <option value="50" selected>50 km</option>
+                    <option value="100">100 km</option>
+                </select>
+                @if (lat != null)
+                {
+                    <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-check-circle text-success me-1"></i>Konum aktif</span>
+                    <a href="/Home/Index?kategori=@kategori" class="btn btn-sm btn-outline-secondary">Filtreyi Kaldır</a>
+                }
+            </div>
+        </div>
+
         @if (!Model.Any())
         {
             <div class="empty-state text-center py-5">
@@ -34,7 +57,7 @@
         }
         else
         {
-            <div class="row g-4"> 
+            <div class="row g-4">
                 @foreach (var item in Model)
                 {
                     <div class="col-lg-4 col-md-6">
@@ -51,7 +74,6 @@
                                     </div>
                                 }
                             </div>
-                            
                             <div class="menu-card-body">
                                 <span class="card-badge">Özel Seçim</span>
                                 <h5 class="card-title">
@@ -69,3 +91,24 @@
         }
     }
 </div>
+
+@section Scripts {
+    <script src="https://maps.googleapis.com/maps/api/js?key=@mapsApiKey"></script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    var radius = document.getElementById('radiusSelect').value;
+                    var kategori = '@kategori';
+                    window.location.href = '/Home/Index?kategori=' + kategori + '&lat=' + lat + '&lng=' + lng + '&radius=' + radius;
+                }, function() {
+                    alert('Konum alınamadı. Lütfen konum iznini etkinleştirin.');
+                });
+            } else {
+                alert('Tarayıcınız konum özelliğini desteklemiyor.');
+            }
+        }
+    </script>
+}

@@ -1,0 +1,98 @@
+@model List<tastemam.Models.SystemLog>
+
+@{
+    ViewData["Title"] = "Sistem Logları";
+    var eventType = ViewData["EventType"] as string;
+    var level = ViewData["Level"] as string;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="font-family: 'Playfair Display', serif;">Sistem Logları</h2>
+    <span class="badge bg-secondary">@Model.Count kayıt</span>
+</div>
+
+<!-- FİLTRELER -->
+<div class="mb-4 p-3" style="background:#f9f9f9; border-radius:8px; border-left: 3px solid #C9A84C;">
+    <div class="d-flex gap-3 flex-wrap align-items-center">
+        <div>
+            <label class="form-label mb-1" style="font-size:0.8rem;">Olay Tipi</label>
+            <select class="form-select form-select-sm" onchange="filterLogs()" id="eventTypeSelect">
+                <option value="">Tümü</option>
+                <option value="Auth" selected="@(eventType == "Auth")">Auth</option>
+                <option value="Order" selected="@(eventType == "Order")">Order</option>
+                <option value="Payment" selected="@(eventType == "Payment")">Payment</option>
+                <option value="Rating" selected="@(eventType == "Rating")">Rating</option>
+                <option value="Error" selected="@(eventType == "Error")">Error</option>
+            </select>
+        </div>
+        <div>
+            <label class="form-label mb-1" style="font-size:0.8rem;">Seviye</label>
+            <select class="form-select form-select-sm" onchange="filterLogs()" id="levelSelect">
+                <option value="">Tümü</option>
+                <option value="Info" selected="@(level == "Info")">Info</option>
+                <option value="Warning" selected="@(level == "Warning")">Warning</option>
+                <option value="Error" selected="@(level == "Error")">Error</option>
+            </select>
+        </div>
+        @if (!string.IsNullOrEmpty(eventType) || !string.IsNullOrEmpty(level))
+        {
+            <div style="margin-top:20px;">
+                <a href="/Admin/Logs" class="btn btn-sm btn-outline-secondary">Filtreyi Temizle</a>
+            </div>
+        }
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Kayıt bulunamadı.</p>
+}
+else
+{
+    <table class="table table-bordered table-sm align-middle">
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>Olay</th>
+                <th>Seviye</th>
+                <th>Kullanıcı</th>
+                <th>Mesaj</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr class="@(log.Level == "Error" ? "table-danger" : log.Level == "Warning" ? "table-warning" : "")">
+                    <td style="font-size:0.85rem; white-space:nowrap;">@log.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td><span class="badge bg-secondary">@log.EventType</span></td>
+                    <td>
+                        @if (log.Level == "Error")
+                        {
+                            <span class="badge bg-danger">Error</span>
+                        }
+                        else if (log.Level == "Warning")
+                        {
+                            <span class="badge bg-warning text-dark">Warning</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Info</span>
+                        }
+                    </td>
+                    <td style="font-size:0.85rem;">@log.UserEmail</td>
+                    <td style="font-size:0.85rem;">@log.Message</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <script>
+        function filterLogs() {
+            var eventType = document.getElementById('eventTypeSelect').value;
+            var level = document.getElementById('levelSelect').value;
+            window.location.href = '/Admin/Logs?eventType=' + eventType + '&level=' + level;
+        }
+    </script>
+}
