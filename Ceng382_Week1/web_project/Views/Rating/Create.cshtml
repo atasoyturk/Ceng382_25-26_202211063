@@ -1,0 +1,81 @@
+@model tastemam.Models.Order
+
+@{
+    ViewData["Title"] = "Değerlendirme";
+    var orderId = ViewData["OrderId"];
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2 class="mb-1" style="font-family: 'Playfair Display', serif;">Siparişinizi Değerlendirin</h2>
+        <p class="text-muted mb-4">Sipariş #@Model.ID</p>
+
+        @foreach (var item in Model.OrderItems)
+        {
+            <div class="card mb-3 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 style="font-family: 'Playfair Display', serif;">@item.Menu?.Name</h6>
+                    <form asp-action="SubmitMenuRating" method="post" class="mt-2">
+                        <input type="hidden" name="orderId" value="@orderId" />
+                        <input type="hidden" name="menuId" value="@item.MenuID" />
+
+                        <div class="mb-2">
+                            <label class="form-label">Puan</label>
+                            <select name="score" class="form-select form-select-sm" style="width:120px;">
+                                <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                                <option value="4">⭐⭐⭐⭐ 4</option>
+                                <option value="3">⭐⭐⭐ 3</option>
+                                <option value="2">⭐⭐ 2</option>
+                                <option value="1">⭐ 1</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Yorum</label>
+                            <textarea name="comment" class="form-control form-control-sm" rows="2" placeholder="Yorumunuz..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-sm btn-danger">Gönder</button>
+                    </form>
+                </div>
+            </div>
+        }
+
+        @{
+            var caretakerId = Model.OrderItems.FirstOrDefault()?.Menu?.CaretakerID;
+        }
+
+        @if (!string.IsNullOrEmpty(caretakerId))
+        {
+            <div class="card mb-3 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 style="font-family: 'Playfair Display', serif;">Caretaker Değerlendirmesi</h6>
+                    <form asp-action="SubmitCaretakerRating" method="post" class="mt-2">
+                        <input type="hidden" name="orderId" value="@orderId" />
+                        <input type="hidden" name="caretakerId" value="@caretakerId" />
+
+                        <div class="mb-2">
+                            <label class="form-label">Puan</label>
+                            <select name="score" class="form-select form-select-sm" style="width:120px;">
+                                <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                                <option value="4">⭐⭐⭐⭐ 4</option>
+                                <option value="3">⭐⭐⭐ 3</option>
+                                <option value="2">⭐⭐ 2</option>
+                                <option value="1">⭐ 1</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Yorum</label>
+                            <textarea name="comment" class="form-control form-control-sm" rows="2" placeholder="Yorumunuz..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-sm btn-danger">Gönder</button>
+                    </form>
+                </div>
+            </div>
+        }
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary mt-2">Ana Sayfaya Dön</a>
+    </div>
+</div>

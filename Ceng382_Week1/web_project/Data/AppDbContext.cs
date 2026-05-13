@@ -18,6 +18,8 @@ namespace tastemam.Data
         public DbSet<CustomizationGroup> CustomizationGroups { get; set; }
         public DbSet<CustomizationOption> CustomizationOptions { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
