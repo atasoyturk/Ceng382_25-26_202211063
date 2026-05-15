@@ -1,17 +1,47 @@
-@model IEnumerable<tastemam.Models.Menu>
+@using X.PagedList
+@model X.PagedList.IPagedList<tastemam.Models.Menu>
 
 @{
     ViewData["Title"] = "Menü Yönetimi";
+    var search = ViewData["Search"] as string;
+    var category = ViewData["Category"] as string;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Menü Yönetimi</h2>
-    <a asp-action="Create" class="btn btn-danger">Yeni Menü Ekle</a>
+    <h2 style="font-family: 'Playfair Display', serif;">Menü Yönetimi</h2>
+    <a asp-action="Create" class="btn btn-danger">+ Yeni Menü Ekle</a>
+</div>
+
+<!-- FİLTRELER -->
+<div class="mb-4 p-3" style="background:#f9f9f9; border-radius:8px; border-left: 3px solid #C9A84C;">
+    <form method="get" asp-action="Index" class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label mb-1" style="font-size:0.8rem;">Arama</label>
+            <input type="text" name="search" value="@search" class="form-control form-control-sm" placeholder="Menü adı veya açıklama..." />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label mb-1" style="font-size:0.8rem;">Kategori</label>
+            <select name="category" class="form-select form-select-sm">
+                <option value="">Tümü</option>
+                <option value="Düğün" selected="@(category == "Düğün")">Düğün</option>
+                <option value="Kurumsal" selected="@(category == "Kurumsal")">Kurumsal</option>
+                <option value="Özel Gün" selected="@(category == "Özel Gün")">Özel Gün</option>
+                <option value="Mezuniyet" selected="@(category == "Mezuniyet")">Mezuniyet</option>
+                <option value="Kokteyl" selected="@(category == "Kokteyl")">Kokteyl</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-sm btn-danger w-100">Filtrele</button>
+        </div>
+        <div class="col-md-2">
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary w-100">Temizle</a>
+        </div>
+    </form>
 </div>
 
 @if (!Model.Any())
 {
-    <p>Henüz menü eklenmemiş.</p>
+    <p class="text-muted">Henüz menü eklenmemiş.</p>
 }
 else
 {
@@ -56,4 +86,28 @@ else
             }
         </tbody>
     </table>
+
+    <!-- PAGINATION -->
+    <nav class="mt-3">
+        <ul class="pagination pagination-sm">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber - 1)&search=@search&category=@category">Önceki</a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="?page=@i&search=@search&category=@category">@i</a>
+                </li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber + 1)&search=@search&category=@category">Sonraki</a>
+                </li>
+            }
+        </ul>
+    </nav>
 }

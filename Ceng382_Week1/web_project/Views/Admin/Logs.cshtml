@@ -1,22 +1,28 @@
-@model List<tastemam.Models.SystemLog>
+@using X.PagedList
+@model X.PagedList.IPagedList<tastemam.Models.SystemLog>
 
 @{
     ViewData["Title"] = "Sistem Logları";
     var eventType = ViewData["EventType"] as string;
     var level = ViewData["Level"] as string;
+    var search = ViewData["Search"] as string;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 style="font-family: 'Playfair Display', serif;">Sistem Logları</h2>
-    <span class="badge bg-secondary">@Model.Count kayıt</span>
+    <span class="badge bg-secondary">@Model.TotalItemCount kayıt</span>
 </div>
 
 <!-- FİLTRELER -->
 <div class="mb-4 p-3" style="background:#f9f9f9; border-radius:8px; border-left: 3px solid #C9A84C;">
-    <div class="d-flex gap-3 flex-wrap align-items-center">
-        <div>
+    <form method="get" asp-action="Logs" class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label mb-1" style="font-size:0.8rem;">Arama</label>
+            <input type="text" name="search" value="@search" class="form-control form-control-sm" placeholder="Mesaj veya kullanıcı..." />
+        </div>
+        <div class="col-md-2">
             <label class="form-label mb-1" style="font-size:0.8rem;">Olay Tipi</label>
-            <select class="form-select form-select-sm" onchange="filterLogs()" id="eventTypeSelect">
+            <select name="eventType" class="form-select form-select-sm">
                 <option value="">Tümü</option>
                 <option value="Auth" selected="@(eventType == "Auth")">Auth</option>
                 <option value="Order" selected="@(eventType == "Order")">Order</option>
@@ -25,22 +31,22 @@
                 <option value="Error" selected="@(eventType == "Error")">Error</option>
             </select>
         </div>
-        <div>
+        <div class="col-md-2">
             <label class="form-label mb-1" style="font-size:0.8rem;">Seviye</label>
-            <select class="form-select form-select-sm" onchange="filterLogs()" id="levelSelect">
+            <select name="level" class="form-select form-select-sm">
                 <option value="">Tümü</option>
                 <option value="Info" selected="@(level == "Info")">Info</option>
                 <option value="Warning" selected="@(level == "Warning")">Warning</option>
                 <option value="Error" selected="@(level == "Error")">Error</option>
             </select>
         </div>
-        @if (!string.IsNullOrEmpty(eventType) || !string.IsNullOrEmpty(level))
-        {
-            <div style="margin-top:20px;">
-                <a href="/Admin/Logs" class="btn btn-sm btn-outline-secondary">Filtreyi Temizle</a>
-            </div>
-        }
-    </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-sm btn-danger w-100">Filtrele</button>
+        </div>
+        <div class="col-md-2">
+            <a href="/Admin/Logs" class="btn btn-sm btn-outline-secondary w-100">Temizle</a>
+        </div>
+    </form>
 </div>
 
 @if (!Model.Any())
@@ -85,14 +91,28 @@ else
             }
         </tbody>
     </table>
-}
 
-@section Scripts {
-    <script>
-        function filterLogs() {
-            var eventType = document.getElementById('eventTypeSelect').value;
-            var level = document.getElementById('levelSelect').value;
-            window.location.href = '/Admin/Logs?eventType=' + eventType + '&level=' + level;
-        }
-    </script>
+    <!-- PAGINATION -->
+    <nav class="mt-3">
+        <ul class="pagination pagination-sm">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber - 1)&eventType=@eventType&level=@level&search=@search">Önceki</a>
+                </li>
+            }
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="?page=@i&eventType=@eventType&level=@level&search=@search">@i</a>
+                </li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber + 1)&eventType=@eventType&level=@level&search=@search">Sonraki</a>
+                </li>
+            }
+        </ul>
+    </nav>
 }

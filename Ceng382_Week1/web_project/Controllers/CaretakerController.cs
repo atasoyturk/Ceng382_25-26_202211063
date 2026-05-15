@@ -6,6 +6,8 @@ using tastemam.Models;
 using tastemam.Services;
 using Microsoft.EntityFrameworkCore;
 
+using X.PagedList.Extensions;
+
 namespace tastemam.Controllers
 {
     [Authorize(Roles = "Admin,Caretaker")]
@@ -31,10 +33,26 @@ namespace tastemam.Controllers
         }
 
         // GET: /Caretaker/Index
-        public IActionResult Index()
+        public IActionResult Index(string search = null, string category = null, int page = 1)
         {
-            var menus = _context.MenuItems.ToList();
-            return View(menus);
+            var menus = _context.MenuItems.AsQueryable();
+
+            var userId = _userManager.GetUserId(User);
+            if (User.IsInRole("Caretaker"))
+                menus = menus.Where(m => m.CaretakerID == userId);
+
+            if (!string.IsNullOrEmpty(search))
+                menus = menus.Where(m => m.Name.Contains(search) || m.Description.Contains(search));
+
+            if (!string.IsNullOrEmpty(category))
+                menus = menus.Where(m => m.Category == category);
+
+            var pagedMenus = menus.ToPagedList(page, 10);
+
+            ViewData["Search"] = search;
+            ViewData["Category"] = category;
+
+            return View(pagedMenus);
         }
 
         // GET: /Caretaker/Create
