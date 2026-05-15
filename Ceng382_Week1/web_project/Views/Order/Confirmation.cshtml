@@ -13,6 +13,9 @@
         <p>Durum: <span class="badge bg-warning">@Model.State</span></p>
         <p class="text-muted">@Model.Date.ToString("dd.MM.yyyy HH:mm")</p>
 
+        <a asp-controller="Order" asp-action="DownloadReceipt" asp-route-id="@Model.ID" class="btn btn-outline-secondary mt-3 me-2">
+            <i class="fas fa-file-pdf me-1"></i>Fişi İndir
+        </a>
         <a asp-controller="Rating" asp-action="Create" asp-route-orderId="@Model.ID" class="btn btn-outline-danger mt-3 me-2">Değerlendir</a>
         <a asp-controller="Home" asp-action="Index" class="btn btn-danger mt-3">Ana Sayfaya Dön</a>
 

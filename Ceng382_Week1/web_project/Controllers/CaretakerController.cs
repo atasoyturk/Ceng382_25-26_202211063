@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using tastemam.Data;
 using tastemam.Models;
+using tastemam.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace tastemam.Controllers
@@ -13,14 +14,20 @@ namespace tastemam.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _env;
+        private readonly LogService _logService;
+        private readonly PdfService _pdfService;
 
         public CaretakerController(AppDbContext context,
             UserManager<IdentityUser> userManager,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            LogService logService,
+            PdfService pdfService)
         {
             _context = context;
             _userManager = userManager;
             _env = env;
+            _logService = logService;
+            _pdfService = pdfService;
         }
 
         // GET: /Caretaker/Index
@@ -172,6 +179,54 @@ namespace tastemam.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Customize", new { id = menuId });
+        }
+
+        // GET: /Caretaker/Agreement
+        public async Task<IActionResult> Agreement()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var existing = _context.CaretakerAgreements
+                .FirstOrDefault(a => a.CaretakerID == user.Id);
+
+            ViewData["IsSigned"] = existing != null && existing.IsApproved;
+            return View();
+        }
+
+        // POST: /Caretaker/SignAgreement
+        [HttpPost]
+        public async Task<IActionResult> SignAgreement()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var existing = _context.CaretakerAgreements
+                .FirstOrDefault(a => a.CaretakerID == user.Id);
+
+            if (existing == null)
+            {
+                _context.CaretakerAgreements.Add(new CaretakerAgreement
+                {
+                    CaretakerID = user.Id,
+                    CaretakerEmail = user.Email,
+                    SignedDate = DateTime.Now,
+                    IsApproved = true
+                });
+                await _context.SaveChangesAsync();
+                await _logService.LogAsync("Auth", $"Caretaker sözleşmeyi imzaladı.", user.Email);
+            }
+
+            return RedirectToAction("DownloadAgreement");
+        }
+
+        // GET: /Caretaker/DownloadAgreement
+        public async Task<IActionResult> DownloadAgreement()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var agreement = _context.CaretakerAgreements
+                .FirstOrDefault(a => a.CaretakerID == user.Id);
+
+            if (agreement == null) return RedirectToAction("Agreement");
+
+            var pdf = _pdfService.GenerateCaretakerAgreement(user.Email, user.UserName, agreement.SignedDate);
+            return File(pdf, "application/pdf", $"tastemam-sozlesme-{user.Email}.pdf");
         }
     }
 }

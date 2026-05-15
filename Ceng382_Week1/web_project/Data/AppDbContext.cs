@@ -19,6 +19,7 @@ namespace tastemam.Data
         public DbSet<CustomizationOption> CustomizationOptions { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<CaretakerAgreement> CaretakerAgreements { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

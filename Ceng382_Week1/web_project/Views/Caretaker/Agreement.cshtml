@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Hizmet Sözleşmesi";
+    var isSigned = (bool)(ViewData["IsSigned"] ?? false);
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2 style="font-family: 'Playfair Display', serif;" class="mb-1">Caretaker Hizmet Sözleşmesi</h2>
+        <p class="text-muted mb-4">Aşağıdaki sözleşmeyi okuyup onaylamanız gerekmektedir.</p>
+
+        @if (isSigned)
+        {
+            <div class="alert alert-success mb-4">
+                <i class="fas fa-check-circle me-2"></i>Sözleşmeyi daha önce imzaladınız.
+                <a asp-action="DownloadAgreement" class="btn btn-sm btn-outline-success ms-3">
+                    <i class="fas fa-file-pdf me-1"></i>Tekrar İndir
+                </a>
+            </div>
+        }
+
+        <div class="card border-0 shadow-sm mb-4" style="max-height: 500px; overflow-y: scroll;">
+            <div class="card-body" style="font-size: 0.9rem; line-height: 1.8;">
+                <h5 class="mb-3" style="color: #C0392B;">TasteMam Catering — Hizmet Sözleşmesi</h5>
+
+                <p><strong>MADDE 1 — TARAFLAR</strong><br />
+                İşbu sözleşme, TasteMam Catering platformu ile platforma kayıtlı caretaker arasında akdedilmiştir.</p>
+
+                <p><strong>MADDE 2 — KONU</strong><br />
+                İşbu sözleşmenin konusu, Hizmet Sağlayıcı'nın Platform üzerinden sunacağı catering hizmetlerine ilişkin karşılıklı hak ve yükümlülüklerin belirlenmesidir.</p>
+
+                <p><strong>MADDE 3 — HİZMET TANIMI</strong><br />
+                Hizmet Sağlayıcı, Platform üzerinde menü oluşturma, fiyat belirleme ve sipariş kabul etme yetkisine sahiptir.</p>
+
+                <p><strong>MADDE 4 — ÖDEME KOŞULLARI</strong><br />
+                Onaylanan siparişler için belirlenen ücretin tamamı Platform komisyonu düşüldükten sonra 3 iş günü içinde ödenir.</p>
+
+                <p><strong>MADDE 5 — ÖDEME YAPILMAMASI HALİNDE YAPTIRIMLAR</strong><br />
+                Ödeme yükümlülüğünün yerine getirilmemesi halinde gecikilen her gün için aylık %5 oranında gecikme faizi uygulanır ve yasal yollara başvurulabilir.</p>
+
+                <p><strong>MADDE 6 — SİPARİŞ İPTALİ</strong><br />
+                Onaylanan bir siparişin haksız yere iptal edilmesi halinde sipariş bedelinin %20'si oranında cezai şart uygulanır.</p>
+
+                <p><strong>MADDE 7 — KALİTE STANDARTLARI</strong><br />
+                Hizmet Sağlayıcı, sunduğu hizmetlerin gıda güvenliği standartlarına uygun olduğunu taahhüt eder.</p>
+
+                <p><strong>MADDE 8 — GİZLİLİK</strong><br />
+                Hizmet Sağlayıcı, müşteri bilgilerini üçüncü şahıslarla paylaşmamayı kabul eder.</p>
+
+                <p><strong>MADDE 9 — REKABET YASAĞI</strong><br />
+                Platform üzerinden tanıştığı müşterilerle Platform dışında doğrudan ticari ilişki kurulamaz.</p>
+
+                <p><strong>MADDE 10 — SÖZLEŞMENİN SÜRESİ</strong><br />
+                İşbu sözleşme imzalandığı tarihten itibaren 1 yıl süreyle geçerlidir.</p>
+
+                <p><strong>MADDE 11-30</strong><br />
+                Fesih, uyuşmazlık çözümü, mücbir sebepler, devir yasağı, bağımsız çalışma, hasar ve kayıplar, sigorta, reklam ve tanıtım, müşteri şikayetleri, menü doğruluğu, hijyen, veri güvenliği, platform kurallarına uyum, tebligat adresi, bölünebilirlik, feragat, yürürlük ve tarafların beyanına ilişkin tüm hükümler PDF sözleşmesinde yer almaktadır.</p>
+            </div>
+        </div>
+
+        @if (!isSigned)
+        {
+            <form asp-action="SignAgreement" method="post">
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="agreeCheck" required />
+                    <label class="form-check-label" for="agreeCheck">
+                        Sözleşmeyi okudum, anladım ve kabul ediyorum.
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-file-signature me-1"></i>İmzala ve PDF İndir
+                </button>
+            </form>
+        }
+
+        <a asp-action="Index" class="btn btn-outline-secondary mt-3">Menü Yönetimine Dön</a>
+    </div>
+</div>

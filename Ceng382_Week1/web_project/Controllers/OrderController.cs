@@ -16,14 +16,17 @@ namespace tastemam.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly LogService _logService;
         private readonly EmailService _emailService;
+        private readonly PdfService _pdfService;
+
         private const string CartKey = "Cart";
 
-        public OrderController(AppDbContext context, UserManager<IdentityUser> userManager, LogService logService, EmailService emailService)
+        public OrderController(AppDbContext context, UserManager<IdentityUser> userManager, LogService logService, EmailService emailService, PdfService pdfService)
         {
             _context = context;
             _userManager = userManager;
             _logService = logService;
             _emailService = emailService;
+            _pdfService = pdfService;
         }
 
         private List<CartItem> GetCart()
@@ -125,5 +128,19 @@ namespace tastemam.Controllers
             if (order == null) return NotFound();
             return View(order);
         }
+
+        public IActionResult DownloadReceipt(int id)
+        {
+            var order = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Menu)
+                .FirstOrDefault(o => o.ID == id);
+
+            if (order == null) return NotFound();
+
+            var pdf = _pdfService.GenerateOrderReceipt(order, order.OrderItems.ToList());
+            return File(pdf, "application/pdf", $"tastemam-fis-{id}.pdf");
+        }
+
     }
 }

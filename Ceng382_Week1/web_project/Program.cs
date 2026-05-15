@@ -11,6 +11,8 @@ builder.Services.AddScoped<LogService>();
 
 builder.Services.AddScoped<EmailService>();
 
+builder.Services.AddScoped<PdfService>();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
