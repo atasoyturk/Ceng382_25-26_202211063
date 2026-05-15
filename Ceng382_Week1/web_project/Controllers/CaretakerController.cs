@@ -80,6 +80,8 @@ namespace tastemam.Controllers
 
             _context.MenuItems.Add(menu);
             await _context.SaveChangesAsync();
+            await _logService.LogAsync("Order", $"Yeni menü oluşturuldu: {menu.Name}", _userManager.GetUserName(User));
+            
             return RedirectToAction("Index");
         }
 
@@ -115,6 +117,8 @@ namespace tastemam.Controllers
             }
 
             await _context.SaveChangesAsync();
+            await _logService.LogAsync("Order", $"Menü güncellendi: {existing.Name}", _userManager.GetUserName(User));
+            
             return RedirectToAction("Index");
         }
 
@@ -127,6 +131,8 @@ namespace tastemam.Controllers
 
             _context.MenuItems.Remove(menu);
             await _context.SaveChangesAsync();
+            await _logService.LogAsync("Order", $"Menü silindi. ID: {id}", _userManager.GetUserName(User));
+            
             return RedirectToAction("Index");
         }
 
