@@ -55,6 +55,13 @@ namespace tastemam.Controllers
             var cart = GetCart();
             if (!cart.Any()) return RedirectToAction("Index", "Cart");
 
+            // 100 tl min siparis  tutar kontrolu
+            if (cart.Sum(i => i.TotalPrice) < 100)
+            {
+                TempData["Error"] = "Minimum sipariş tutarı 100₺'dir.";
+                return RedirectToAction("Checkout");
+            }
+
             var user = await _userManager.GetUserAsync(User);
 
             var order = new Order
