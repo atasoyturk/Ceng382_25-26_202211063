@@ -131,7 +131,6 @@ namespace tastemam.Controllers
 
             _context.MenuItems.Remove(menu);
             await _context.SaveChangesAsync();
-            await _logService.LogAsync("Order", $"Menü silindi. ID: {id}", _userManager.GetUserName(User));
             
             return RedirectToAction("Index");
         }
