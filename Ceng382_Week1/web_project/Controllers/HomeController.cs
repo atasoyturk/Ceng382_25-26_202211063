@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 using tastemam.Data;
+
 
 namespace tastemam.Controllers
 {
@@ -8,11 +11,14 @@ namespace tastemam.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(AppDbContext context, IConfiguration config)
+
+        public HomeController(AppDbContext context, IConfiguration config, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _config = config;
+            _userManager = userManager;
         }
 
         public IActionResult Index(string kategori = null, double? lat = null, double? lng = null, double radius = 50)
@@ -57,6 +63,26 @@ namespace tastemam.Controllers
 
             if (menu == null) return NotFound();
             return View(menu);
+        }
+
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "User")]
+        public async Task<IActionResult> Dashboard()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var orders = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Menu)
+                .Where(o => o.UserID == user.Id)
+                .OrderByDescending(o => o.Date)
+                .ToList();
+
+            ViewData["TotalOrders"] = orders.Count;
+            ViewData["TotalSpent"] = orders.Sum(o => o.TotalPrice);
+            ViewData["CompletedOrders"] = orders.Count(o => o.State == "completed");
+            ViewData["RecentOrders"] = orders.Take(5).ToList();
+
+            return View();
         }
 
         private double GetDistance(double lat1, double lon1, double lat2, double lon2)

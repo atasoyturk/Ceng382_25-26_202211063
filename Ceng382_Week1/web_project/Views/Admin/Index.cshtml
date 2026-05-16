@@ -1,0 +1,94 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var totalUsers = (int)ViewData["TotalUsers"];
+    var totalCaretakers = (int)ViewData["TotalCaretakers"];
+    var totalOrders = (int)ViewData["TotalOrders"];
+    var totalMenuItems = (int)ViewData["TotalMenuItems"];
+    var totalLogs = (int)ViewData["TotalLogs"];
+    var recentLogs = ViewData["RecentLogs"] as List<tastemam.Models.SystemLog>;
+}
+
+<div style="padding: 10px 0 30px;">
+    <p style="font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: #C0392B; margin-bottom: 6px;">Yönetim Paneli</p>
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #1a1a1a;">Admin Dashboard</h2>
+</div>
+
+<!-- İSTATİSTİK KARTLARI -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-4">
+            <i class="fas fa-users fa-2x mb-3" style="color: #C0392B;"></i>
+            <h3 style="font-family: 'Playfair Display', serif;">@totalUsers</h3>
+            <p class="text-muted mb-0">Toplam Kullanıcı</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-4">
+            <i class="fas fa-concierge-bell fa-2x mb-3" style="color: #C9A84C;"></i>
+            <h3 style="font-family: 'Playfair Display', serif;">@totalCaretakers</h3>
+            <p class="text-muted mb-0">Toplam Caretaker</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-4">
+            <i class="fas fa-shopping-basket fa-2x mb-3" style="color: #C0392B;"></i>
+            <h3 style="font-family: 'Playfair Display', serif;">@totalOrders</h3>
+            <p class="text-muted mb-0">Toplam Sipariş</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-4">
+            <i class="fas fa-utensils fa-2x mb-3" style="color: #C9A84C;"></i>
+            <h3 style="font-family: 'Playfair Display', serif;">@totalMenuItems</h3>
+            <p class="text-muted mb-0">Toplam Menü</p>
+        </div>
+    </div>
+</div>
+
+<!-- SON LOGLAR -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header" style="background: #1a1a1a; color: white; border-radius: 8px 8px 0 0;">
+        <i class="fas fa-list-alt me-2"></i>Son Sistem Olayları
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Olay</th>
+                    <th>Seviye</th>
+                    <th>Kullanıcı</th>
+                    <th>Mesaj</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in recentLogs)
+                {
+                    <tr>
+                        <td style="font-size:0.85rem;">@log.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td><span class="badge bg-secondary">@log.EventType</span></td>
+                        <td>
+                            @if (log.Level == "Error")
+                            {
+                                <span class="badge bg-danger">Error</span>
+                            }
+                            else if (log.Level == "Warning")
+                            {
+                                <span class="badge bg-warning text-dark">Warning</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Info</span>
+                            }
+                        </td>
+                        <td style="font-size:0.85rem;">@log.UserEmail</td>
+                        <td style="font-size:0.85rem;">@log.Message</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-end">
+        <a asp-action="Logs" class="btn btn-sm btn-outline-danger">Tüm Logları Gör</a>
+    </div>
+</div>

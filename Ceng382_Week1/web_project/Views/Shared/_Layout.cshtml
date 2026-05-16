@@ -67,8 +67,21 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Admin Panel
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" asp-controller="Admin" asp-action="Logs">
                                     <i class="fas fa-list-alt me-1"></i>Sistem Logları
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Dashboard">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
                                 </a>
                             </li>
                         }

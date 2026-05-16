@@ -33,11 +33,11 @@ namespace tastemam.Controllers
         }
 
         // GET: /Caretaker/Index
-        public IActionResult Index(string search = null, string category = null, int page = 1)
+        public async Task<IActionResult> Index(string search = null, string category = null, int page = 1)
         {
-            var menus = _context.MenuItems.AsQueryable();
-
             var userId = _userManager.GetUserId(User);
+
+            var menus = _context.MenuItems.AsQueryable();
             if (User.IsInRole("Caretaker"))
                 menus = menus.Where(m => m.CaretakerID == userId);
 
@@ -49,12 +49,30 @@ namespace tastemam.Controllers
 
             var pagedMenus = menus.ToPagedList(page, 10);
 
+            // Dashboard istatistikleri
+            var myMenuIds = _context.MenuItems
+                .Where(m => m.CaretakerID == userId)
+                .Select(m => m.ID)
+                .ToList();
+
+            var myOrders = _context.Orders
+                .Include(o => o.OrderItems)
+                .Where(o => o.OrderItems.Any(i => myMenuIds.Contains(i.MenuID)))
+                .ToList();
+
+            var myRatings = _context.Ratings
+                .Where(r => r.CaretakerID == userId)
+                .ToList();
+
             ViewData["Search"] = search;
             ViewData["Category"] = category;
+            ViewData["TotalOrders"] = myOrders.Count;
+            ViewData["CompletedOrders"] = myOrders.Count(o => o.State == "completed");
+            ViewData["TotalRevenue"] = myOrders.Sum(o => o.TotalPrice);
+            ViewData["AverageRating"] = myRatings.Any() ? myRatings.Average(r => r.Score).ToString("0.0") : "—";
 
             return View(pagedMenus);
         }
-
         // GET: /Caretaker/Create
         public IActionResult Create()
         {
