@@ -1,0 +1,58 @@
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+@{
+    ViewData["Title"] = "Caretakerlar";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <p style="font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: #C0392B; margin-bottom: 6px;">Yönetim</p>
+        <h2 style="font-family: 'Playfair Display', serif;">Caretakerlar</h2>
+    </div>
+    <span class="badge bg-secondary">@Model.Count() caretaker</span>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-bordered table-sm align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>E-posta</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>Sözleşme</th>
+                    <th>Menü Sayısı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var caretaker in Model)
+                {
+                    <tr>
+                        <td>@caretaker.Email</td>
+                        <td>@caretaker.UserName</td>
+                        <td>
+                            @{
+                                var hasAgreement = ViewData["Agreements"] as Dictionary<string, bool>;
+                                var signed = hasAgreement != null && hasAgreement.ContainsKey(caretaker.Id) && hasAgreement[caretaker.Id];
+                            }
+                            @if (signed)
+                            {
+                                <span class="badge bg-success">İmzalandı</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">İmzalanmadı</span>
+                            }
+                        </td>
+                        <td>
+                            @{
+                                var menuCounts = ViewData["MenuCounts"] as Dictionary<string, int>;
+                                var count = menuCounts != null && menuCounts.ContainsKey(caretaker.Id) ? menuCounts[caretaker.Id] : 0;
+                            }
+                            @count
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

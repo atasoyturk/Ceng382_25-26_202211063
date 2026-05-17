@@ -1,0 +1,46 @@
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <p style="font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: #C0392B; margin-bottom: 6px;">Yönetim</p>
+        <h2 style="font-family: 'Playfair Display', serif;">Kullanıcılar</h2>
+    </div>
+    <span class="badge bg-secondary">@Model.Count() kullanıcı</span>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-bordered table-sm align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>E-posta</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>Email Onaylı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Email</td>
+                        <td>@user.UserName</td>
+                        <td>
+                            @if (user.EmailConfirmed)
+                            {
+                                <span class="badge bg-success">Onaylı</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Onaysız</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

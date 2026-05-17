@@ -62,6 +62,24 @@ namespace tastemam.Controllers
                 .FirstOrDefault(m => m.ID == id);
 
             if (menu == null) return NotFound();
+
+            var menuRatings = _context.Ratings
+                .Where(r => r.MenuID == id && r.Type == "Menu")
+                .ToList();
+
+            var caretakerRatings = _context.Ratings
+                .Where(r => r.CaretakerID == menu.CaretakerID && r.Type == "Caretaker")
+                .ToList();
+
+            var caretaker = _userManager.FindByIdAsync(menu.CaretakerID).Result;
+
+            ViewData["MenuAvgRating"] = menuRatings.Any() ? menuRatings.Average(r => r.Score).ToString("0.0") : "—";
+            ViewData["MenuRatingCount"] = menuRatings.Count;
+            ViewData["CaretakerAvgRating"] = caretakerRatings.Any() ? caretakerRatings.Average(r => r.Score).ToString("0.0") : "—";
+            ViewData["CaretakerRatingCount"] = caretakerRatings.Count;
+            ViewData["CaretakerEmail"] = caretaker?.Email ?? "—";
+            ViewData["MenuComments"] = menuRatings.Where(r => !string.IsNullOrEmpty(r.Comment)).ToList();
+
             return View(menu);
         }
 

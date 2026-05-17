@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>  
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-web_project-bb18c48c-0e55-4763-83b0-cfdb9782a76e</UserSecretsId>
   </PropertyGroup>

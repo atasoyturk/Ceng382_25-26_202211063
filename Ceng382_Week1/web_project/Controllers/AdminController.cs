@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tastemam.Data;
-using Microsoft.AspNetCore.Identity;
+using tastemam.Services;
 using X.PagedList.Extensions;
 
 namespace tastemam.Controllers
@@ -12,12 +13,13 @@ namespace tastemam.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly LogService _logService;
 
-
-        public AdminController(AppDbContext context, UserManager<IdentityUser> userManager)
+        public AdminController(AppDbContext context, UserManager<IdentityUser> userManager, LogService logService)
         {
             _context = context;
             _userManager = userManager;
+            _logService = logService;
         }
 
         public async Task<IActionResult> Index()
@@ -35,7 +37,45 @@ namespace tastemam.Controllers
                 .Take(5)
                 .ToList();
 
+            await _logService.LogAsync("Admin", "Admin dashboard görüntülendi.", User.Identity.Name);
             return View();
+        }
+
+        public async Task<IActionResult> Users()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("User");
+            await _logService.LogAsync("Admin", "Kullanıcı listesi görüntülendi.", User.Identity.Name);
+            return View(users);
+        }
+
+        public async Task<IActionResult> Caretakers()
+        {
+            var caretakers = await _userManager.GetUsersInRoleAsync("Caretaker");
+
+            var agreements = _context.CaretakerAgreements
+                .ToDictionary(a => a.CaretakerID, a => a.IsApproved);
+
+            var menuCounts = _context.MenuItems
+                .GroupBy(m => m.CaretakerID)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            ViewData["Agreements"] = agreements;
+            ViewData["MenuCounts"] = menuCounts;
+
+            await _logService.LogAsync("Admin", "Caretaker listesi görüntülendi.", User.Identity.Name);
+            return View(caretakers);
+        }
+
+        public async Task<IActionResult> Orders(int page = 1)
+        {
+            var orders = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Menu)
+                .OrderByDescending(o => o.Date)
+                .ToPagedList(page, 20);
+
+            await _logService.LogAsync("Admin", "Sipariş listesi görüntülendi.", User.Identity.Name);
+            return View(orders);
         }
 
         public IActionResult Logs(string eventType = null, string level = null, string search = null, int page = 1)

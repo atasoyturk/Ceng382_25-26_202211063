@@ -1,16 +1,19 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using tastemam.Data;
 
 namespace tastemam.Services
 {
     public class EmailService
     {
         private readonly IConfiguration _config;
+        private readonly LogService _logService;
 
-        public EmailService(IConfiguration config)
+        public EmailService(IConfiguration config, LogService logService)
         {
             _config = config;
+            _logService = logService;
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string body)
@@ -32,11 +35,13 @@ namespace tastemam.Services
             );
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
+
+            await _logService.LogAsync("Email", $"Email gönderildi: {toEmail} — {subject}", toEmail);
         }
 
         public async Task SendOrderConfirmationAsync(string toEmail, int orderId, decimal totalPrice, string items)
         {
-            var subject = $"tastemam - Sipariş Onayı #{orderId}";
+            var subject = $"TasteMam - Sipariş Onayı #{orderId}";
             var body = $@"
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                     <h2 style='color: #C0392B;'>Siparişiniz Alındı!</h2>
