@@ -124,6 +124,28 @@ namespace tastemam.Data
                                 ImagePath = "",
                                 Latitude = lat,
                                 Longitude = lng
+                            },
+                            new Menu
+                            {
+                                Name = $"{name} Mezuniyet Menüsü",
+                                Description = $"{name} bölgesine özel mezuniyet catering hizmeti.",
+                                Price = 250,
+                                Category = "Mezuniyet",
+                                CaretakerID = user.Id,
+                                ImagePath = "",
+                                Latitude = lat,
+                                Longitude = lng
+                            },
+                            new Menu
+                            {
+                                Name = $"{name} Kokteyl Menüsü",
+                                Description = $"{name} bölgesine özel kokteyl catering hizmeti.",
+                                Price = 180,
+                                Category = "Kokteyl",
+                                CaretakerID = user.Id,
+                                ImagePath = "",
+                                Latitude = lat,
+                                Longitude = lng
                             }
                         );
                     }

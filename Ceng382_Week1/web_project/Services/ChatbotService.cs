@@ -46,8 +46,13 @@ namespace tastemam.Services
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var doc = JsonDocument.Parse(responseBody);
-            var text = doc.RootElement
-                .GetProperty("candidates")[0]
+
+            if (!doc.RootElement.TryGetProperty("candidates", out var candidates))
+            {
+                return "Şu anda yanıt veremiyorum, lütfen tekrar deneyin.";
+            }
+
+            var text = candidates[0]
                 .GetProperty("content")
                 .GetProperty("parts")[0]
                 .GetProperty("text")

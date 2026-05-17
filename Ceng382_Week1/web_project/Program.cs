@@ -64,7 +64,7 @@ app.Use(async (context, next) =>
         "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; " +
         "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
         "img-src 'self' data: https://maps.googleapis.com https://maps.gstatic.com; " +
-        "connect-src 'self' https://maps.googleapis.com https://generativelanguage.googleapis.com wss://localhost:* https://cdn.jsdelivr.net; " +
+        "connect-src 'self' https://maps.googleapis.com https://generativelanguage.googleapis.com wss://localhost:* https://cdn.jsdelivr.net https://meet.jit.si; " +
         "frame-src https://meet.jit.si; " +
         "frame-ancestors 'none';");
     await next();
