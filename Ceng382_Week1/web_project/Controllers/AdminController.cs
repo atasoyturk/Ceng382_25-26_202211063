@@ -78,6 +78,26 @@ namespace tastemam.Controllers
             return View(orders);
         }
 
+        public async Task<IActionResult> Ratings(string type = null, int page = 1)
+        {
+            var ratings = _context.Ratings
+                .Include(r => r.Menu)
+                .Include(r => r.Order)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(type))
+                ratings = ratings.Where(r => r.Type == type);
+
+            ratings = ratings.OrderByDescending(r => r.Date);
+
+            var pagedRatings = ratings.ToPagedList(page, 20);
+
+            ViewData["Type"] = type;
+
+            await _logService.LogAsync("Admin", "Rating listesi görüntülendi.", User.Identity.Name);
+            return View(pagedRatings);
+        }
+
         public IActionResult Logs(string eventType = null, string level = null, string search = null, int page = 1)
         {
             var logs = _context.SystemLogs.AsQueryable();

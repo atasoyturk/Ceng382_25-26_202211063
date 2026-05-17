@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
+using X.PagedList.Extensions;
+
 using tastemam.Data;
 
 
@@ -81,6 +83,29 @@ namespace tastemam.Controllers
             ViewData["MenuComments"] = menuRatings.Where(r => !string.IsNullOrEmpty(r.Comment)).ToList();
 
             return View(menu);
+        }
+
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "User")]
+        public async Task<IActionResult> Orders(string search = null, int page = 1)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var orders = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Menu)
+                .Where(o => o.UserID == user.Id)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+                orders = orders.Where(o => o.CustomerName.Contains(search) ||
+                                        o.OrderItems.Any(i => i.Menu.Name.Contains(search)));
+
+            orders = orders.OrderByDescending(o => o.Date);
+
+            var pagedOrders = orders.ToPagedList(page, 10);
+
+            ViewData["Search"] = search;
+            return View(pagedOrders);
         }
 
         [Microsoft.AspNetCore.Authorization.Authorize(Roles = "User")]
