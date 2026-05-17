@@ -1,0 +1,35 @@
+@model tastemam.Models.TwoFactorViewModel
+
+@{
+    ViewData["Title"] = "İki Adımlı Doğrulama";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <h2 class="mb-2" style="font-family: 'Playfair Display', serif;">İki Adımlı Doğrulama</h2>
+        <p class="text-muted mb-4">
+            <i class="fas fa-envelope me-1"></i>
+            <strong>@Model.Email</strong> adresine doğrulama kodu gönderildi.
+        </p>
+
+        <form asp-action="TwoFactor" method="post">
+            <input type="hidden" asp-for="Email" />
+            <input type="hidden" asp-for="RememberMe" />
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Code" class="form-label">Doğrulama Kodu</label>
+                <input asp-for="Code" class="form-control" placeholder="6 haneli kod"
+                       maxlength="6" style="letter-spacing: 4px; font-size: 1.2rem;" autofocus />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Doğrula</button>
+            <a asp-action="Login" class="btn btn-outline-secondary w-100 mt-2">Geri Dön</a>
+        </form>
+
+        <p class="text-muted mt-3" style="font-size:0.85rem;">
+            <i class="fas fa-clock me-1"></i>Kod 10 dakika geçerlidir.
+        </p>
+    </div>
+</div>
