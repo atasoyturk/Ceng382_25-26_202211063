@@ -140,6 +140,24 @@ namespace tastemam.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> MyOrders(int page = 1)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var myMenuIds = _context.MenuItems
+                .Where(m => m.CaretakerID == user.Id)
+                .Select(m => m.ID)
+                .ToList();
+
+            var orders = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Menu)
+                .Where(o => o.OrderItems.Any(i => myMenuIds.Contains(i.MenuID)))
+                .OrderByDescending(o => o.Date)
+                .ToPagedList(page, 10);
+
+            return View(orders);
+        }
+
         // POST: /Caretaker/Delete/5
         [HttpPost]
         public async Task<IActionResult> Delete(int id)

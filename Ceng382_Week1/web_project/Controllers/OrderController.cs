@@ -136,6 +136,15 @@ namespace tastemam.Controllers
             return View(order);
         }
 
+        public IActionResult Call(int id)
+        {
+            var order = _context.Orders.Find(id);
+            if (order == null) return NotFound();
+
+            ViewData["RoomName"] = $"tastemam-order-{id}";
+            ViewData["OrderId"] = id;
+            return View(order);
+        }
         public IActionResult DownloadReceipt(int id)
         {
             var order = _context.Orders

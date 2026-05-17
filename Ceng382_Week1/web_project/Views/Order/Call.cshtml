@@ -1,0 +1,67 @@
+@model tastemam.Models.Order
+
+@{
+    ViewData["Title"] = "Görüşme";
+    var roomName = ViewData["RoomName"] as string;
+    var orderId = ViewData["OrderId"];
+}
+
+<div style="padding: 10px 0 20px;">
+    <p style="font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: #C0392B; margin-bottom: 6px;">Canlı Görüşme</p>
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #1a1a1a;">
+        Sipariş #@orderId — Caretaker ile Görüş
+    </h2>
+    <p class="text-muted">Görüşmeye katılmak için aşağıdaki butona tıklayın.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div id="jitsi-container" style="height: 600px; border-radius: 12px; overflow: hidden; background: #1a1a1a;">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4">
+            <h6 style="font-family: 'Playfair Display', serif;">Görüşme Bilgileri</h6>
+            <hr />
+            <p style="font-size:0.9rem;"><i class="fas fa-hashtag me-2 text-danger"></i>Sipariş: #@orderId</p>
+            <p style="font-size:0.9rem;"><i class="fas fa-user me-2 text-danger"></i>Müşteri: @Model.CustomerName</p>
+            <p style="font-size:0.9rem;"><i class="fas fa-circle me-2 text-success"></i>Oda: @roomName</p>
+            <hr />
+            <p style="font-size:0.8rem; color:#888;">
+                Aynı sipariş numarasına sahip caretaker da bu odaya katılabilir.
+            </p>
+            <a asp-controller="Order" asp-action="Confirmation" asp-route-id="@Model.ID"
+               class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                <i class="fas fa-arrow-left me-1"></i>Geri Dön
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+        const domain = "meet.jit.si";
+        const options = {
+            roomName: "@roomName",
+            width: "100%",
+            height: 600,
+            parentNode: document.getElementById("jitsi-container"),
+            userInfo: {
+                displayName: "@User.Identity.Name"
+            },
+            configOverwrite: {
+                startWithAudioMuted: false,
+                startWithVideoMuted: false,
+                enableWelcomePage: false
+            },
+            interfaceConfigOverwrite: {
+                SHOW_JITSI_WATERMARK: false,
+                SHOW_WATERMARK_FOR_GUESTS: false,
+                DEFAULT_BACKGROUND: "#1a1a1a"
+            }
+        };
+
+        const api = new JitsiMeetExternalAPI(domain, options);
+    </script>
+}

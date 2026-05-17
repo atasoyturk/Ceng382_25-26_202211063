@@ -59,6 +59,11 @@
                         @if (User.IsInRole("Caretaker"))
                         {
                             <li class="nav-item">
+                                <a class="nav-link" asp-controller="Caretaker" asp-action="MyOrders">
+                                    <i class="fas fa-shopping-basket me-1"></i>Siparişler
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" asp-controller="Caretaker" asp-action="Agreement">
                                     <i class="fas fa-file-signature me-1"></i>Sözleşme
                                 </a>
