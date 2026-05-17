@@ -287,5 +287,44 @@ namespace tastemam.Controllers
             var pdf = _pdfService.GenerateCaretakerAgreement(user.Email, user.UserName, agreement.SignedDate);
             return File(pdf, "application/pdf", $"tastemam-sozlesme-{user.Email}.pdf");
         }
+
+        // GET: /Caretaker/Ingredients/5
+        public IActionResult Ingredients(int id)
+        {
+            var menu = _context.MenuItems
+                .Include(m => m.Ingredients)
+                .FirstOrDefault(m => m.ID == id);
+
+            if (menu == null) return NotFound();
+            return View(menu);
+        }
+
+        // POST: /Caretaker/AddIngredient
+        [HttpPost]
+        public async Task<IActionResult> AddIngredient(int menuId, string name, bool isRemovable)
+        {
+            _context.Ingredients.Add(new Ingredient
+            {
+                MenuID = menuId,
+                Name = name,
+                IsRemovable = isRemovable
+            });
+            await _context.SaveChangesAsync();
+            await _logService.LogAsync("Order", $"Malzeme eklendi: {name}", _userManager.GetUserName(User));
+            return RedirectToAction("Ingredients", new { id = menuId });
+        }
+
+        // POST: /Caretaker/DeleteIngredient
+        [HttpPost]
+        public async Task<IActionResult> DeleteIngredient(int ingredientId, int menuId)
+        {
+            var ingredient = _context.Ingredients.Find(ingredientId);
+            if (ingredient != null)
+            {
+                _context.Ingredients.Remove(ingredient);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Ingredients", new { id = menuId });
+        }
     }
 }

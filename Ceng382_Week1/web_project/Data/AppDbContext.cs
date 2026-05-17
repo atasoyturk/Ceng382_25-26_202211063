@@ -20,6 +20,8 @@ namespace tastemam.Data
         public DbSet<SystemLog> SystemLogs { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<CaretakerAgreement> CaretakerAgreements { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

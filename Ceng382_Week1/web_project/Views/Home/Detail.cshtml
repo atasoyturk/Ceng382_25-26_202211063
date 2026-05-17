@@ -23,6 +23,24 @@
         <p class="text-muted">@Model.Description</p>
         <h4 class="text-danger">@Model.Price ₺</h4>
 
+        @if (Model.Ingredients != null && Model.Ingredients.Any())
+        {
+            <hr />
+            <h5 style="font-family: 'Playfair Display', serif;">İçerikler</h5>
+            <ul class="list-group mb-3">
+                @foreach (var ingredient in Model.Ingredients)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-check me-2" style="color:#C9A84C;"></i>@ingredient.Name</span>
+                        @if (ingredient.IsRemovable)
+                        {
+                            <span class="badge bg-warning text-dark">Çıkarılabilir</span>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+
         @if (Model.CustomizationGroups != null && Model.CustomizationGroups.Any())
         {
             <hr />

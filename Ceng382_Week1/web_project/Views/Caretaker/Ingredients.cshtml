@@ -1,0 +1,79 @@
+@model tastemam.Models.Menu
+
+@{
+    ViewData["Title"] = "Malzeme Yönetimi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="font-family: 'Playfair Display', serif;">@Model.Name — Malzemeler</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Geri Dön</a>
+</div>
+
+<!-- YENİ MALZEME EKLE -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-danger text-white">Yeni Malzeme Ekle</div>
+    <div class="card-body">
+        <form asp-action="AddIngredient" method="post" class="row g-3">
+            <input type="hidden" name="menuId" value="@Model.ID" />
+            <div class="col-md-5">
+                <input type="text" name="name" class="form-control" placeholder="Malzeme adı (örn: Çorba, Ana Yemek)" required />
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+                <div class="form-check">
+                    <input type="checkbox" name="isRemovable" value="true" class="form-check-input" id="isRemovable" />
+                    <label class="form-check-label" for="isRemovable">Çıkarılabilir</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-danger w-100">Ekle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MEVCUT MALZEMELER -->
+@if (Model.Ingredients != null && Model.Ingredients.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-bordered table-sm align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Malzeme</th>
+                        <th>Çıkarılabilir</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ingredient in Model.Ingredients)
+                    {
+                        <tr>
+                            <td>@ingredient.Name</td>
+                            <td>
+                                @if (ingredient.IsRemovable)
+                                {
+                                    <span class="badge bg-warning text-dark">Evet</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Hayır</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="DeleteIngredient" method="post" class="d-inline">
+                                    <input type="hidden" name="ingredientId" value="@ingredient.ID" />
+                                    <input type="hidden" name="menuId" value="@Model.ID" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-muted">Henüz malzeme eklenmemiş.</p>
+}

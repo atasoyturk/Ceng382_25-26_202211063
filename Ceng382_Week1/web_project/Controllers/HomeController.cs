@@ -61,6 +61,7 @@ namespace tastemam.Controllers
             var menu = _context.MenuItems
                 .Include(m => m.CustomizationGroups)
                 .ThenInclude(g => g.Options)
+                .Include(m => m.Ingredients)
                 .FirstOrDefault(m => m.ID == id);
 
             if (menu == null) return NotFound();
