@@ -11,6 +11,8 @@ builder.Services.AddScoped<LogService>();
 
 builder.Services.AddScoped<EmailService>();
 
+builder.Services.AddHttpClient<ChatbotService>();
+
 builder.Services.AddScoped<PdfService>();
 
 builder.Services.AddSession(options =>

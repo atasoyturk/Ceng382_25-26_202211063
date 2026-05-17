@@ -20,7 +20,6 @@
     <!-- i used "Font Awesome" for the icons-->
 </head>
 <body>
-
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg tm-navbar">
         <div class="container">
@@ -215,5 +214,94 @@
         crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- CHATBOT -->
+    <div id="chatbot-container" style="position:fixed; bottom:20px; right:20px; z-index:9999;">
+        <button id="chatbot-toggle" onclick="toggleChat()"
+                style="width:55px; height:55px; border-radius:50%; background:#C0392B; border:none; color:white; font-size:1.3rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor:pointer;">
+            <i class="fas fa-comments"></i>
+        </button>
+
+        <div id="chatbot-box" style="display:none; position:absolute; bottom:65px; right:0; width:320px; background:white; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); overflow:hidden;">
+            <div style="background:#1a1a1a; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:white; font-family:'Playfair Display',serif; font-size:0.95rem;">
+                    <i class="fas fa-robot me-2" style="color:#C9A84C;"></i>TasteMam Asistan
+                </span>
+                <button onclick="toggleChat()" style="background:none; border:none; color:#aaa; cursor:pointer;">✕</button>
+            </div>
+
+            <div id="chatbot-messages" style="height:300px; overflow-y:auto; padding:12px; background:#f9f9f9;">
+                <div style="background:#e8e8e8; padding:10px 12px; border-radius:8px; margin-bottom:8px; font-size:0.88rem;">
+                    Merhaba! tastemam catering servisi hakkında size nasıl yardımcı olabilirim?
+                </div>
+            </div>
+
+            <div style="padding:10px; background:white; border-top:1px solid #eee; display:flex; gap:8px;">
+                <input type="text" id="chatbot-input" placeholder="Mesajınızı yazın..."
+                    style="flex:1; border:1px solid #ddd; border-radius:6px; padding:8px 10px; font-size:0.88rem; outline:none;"
+                    onkeypress="if(event.key==='Enter') sendMessage()" />
+                <button onclick="sendMessage()"
+                        style="background:#C0392B; border:none; color:white; padding:8px 12px; border-radius:6px; cursor:pointer;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const box = document.getElementById('chatbot-box');
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const messages = document.getElementById('chatbot-messages');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Kullanıcı mesajı
+            messages.innerHTML += `
+                <div style="text-align:right; margin-bottom:8px;">
+                    <span style="background:#C0392B; color:white; padding:8px 12px; border-radius:8px; font-size:0.88rem; display:inline-block;">
+                        ${message}
+                    </span>
+                </div>`;
+
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+
+            // Yükleniyor
+            const loadingId = 'loading-' + Date.now();
+            messages.innerHTML += `
+                <div id="${loadingId}" style="background:#e8e8e8; padding:10px 12px; border-radius:8px; margin-bottom:8px; font-size:0.88rem;">
+                    <i class="fas fa-spinner fa-spin"></i> Yanıt bekleniyor...
+                </div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                const response = await fetch('/Chatbot/Ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+
+                document.getElementById(loadingId).remove();
+                messages.innerHTML += `
+                    <div style="background:#e8e8e8; padding:10px 12px; border-radius:8px; margin-bottom:8px; font-size:0.88rem;">
+                        ${data.reply}
+                    </div>`;
+            } catch (e) {
+                document.getElementById(loadingId).remove();
+                messages.innerHTML += `
+                    <div style="background:#ffe0e0; padding:10px 12px; border-radius:8px; margin-bottom:8px; font-size:0.88rem;">
+                        Bağlantı hatası oluştu.
+                    </div>`;
+            }
+
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
 </body>
 </html>
