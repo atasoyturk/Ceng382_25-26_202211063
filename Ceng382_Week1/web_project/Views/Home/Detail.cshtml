@@ -66,43 +66,61 @@
             }
         }
 
-        <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
-            <input type="hidden" name="menuId" value="@Model.ID" />
-            <input type="hidden" name="quantity" value="1" />
+        @if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+        {
+            <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
+                <input type="hidden" name="menuId" value="@Model.ID" />
+                <input type="hidden" name="quantity" value="1" />
 
-            @if (Model.CustomizationGroups != null && Model.CustomizationGroups.Any())
-            {
-                @foreach (var group in Model.CustomizationGroups)
+                @if (Model.CustomizationGroups != null && Model.CustomizationGroups.Any())
                 {
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">@group.Name</label>
-                        @foreach (var option in group.Options)
-                        {
-                            <div class="form-check">
-                                <input type="checkbox" name="selectedOptionIds" value="@option.ID"
-                                    class="form-check-input"
-                                    @(option.IsDefault ? "checked" : "") />
-                                <label class="form-check-label">
-                                    @option.Name
-                                    @if (option.PriceModifier > 0)
-                                    {
-                                        <span class="text-danger">(+@option.PriceModifier ₺)</span>
-                                    }
-                                </label>
-                            </div>
-                        }
-                    </div>
+                    @foreach (var group in Model.CustomizationGroups)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">@group.Name</label>
+                            @foreach (var option in group.Options)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox" name="selectedOptionIds" value="@option.ID"
+                                        class="form-check-input"
+                                        @(option.IsDefault ? "checked" : "") />
+                                    <label class="form-check-label">
+                                        @option.Name
+                                        @if (option.PriceModifier > 0)
+                                        {
+                                            <span class="text-danger">(+@option.PriceModifier ₺)</span>
+                                        }
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    }
                 }
-            }
 
-            <div class="mb-3">
-                <label class="form-label">Adet</label>
-                <input type="number" name="quantity" value="1" min="1" class="form-control" style="width:100px;" />
+                <div class="mb-3">
+                    <label class="form-label">Adet</label>
+                    <input type="number" name="quantity" value="1" min="1" class="form-control" style="width:100px;" />
+                </div>
+
+                <button type="submit" class="btn btn-danger">Sepete Ekle</button>
+                <a asp-action="Index" class="btn btn-outline-secondary ms-2">Geri Dön</a>
+            </form>
+        }
+        else if (!User.Identity.IsAuthenticated)
+        {
+            <div class="mt-3">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-danger">
+                    <i class="fas fa-sign-in-alt me-1"></i>Sipariş için giriş yapın
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary ms-2">Geri Dön</a>
             </div>
-
-            <button type="submit" class="btn btn-danger">Sepete Ekle</button>
-            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Geri Dön</a>
-        </form>
+        }
+        else
+        {
+            <div class="mt-3">
+                <a asp-action="Index" class="btn btn-outline-secondary">Geri Dön</a>
+            </div>
+        }
 
         <hr class="mt-4" />
 

@@ -14,9 +14,18 @@
                 @foreach (var item in Model)
                 {
                     <div class="d-flex justify-content-between">
-                        <span>@item.MenuName x@item.Quantity</span>
+                        <span><strong>@item.MenuName</strong> x@item.Quantity</span>
                         <span>@item.TotalPrice ₺</span>
                     </div>
+                    @if (item.SelectedOptions.Any())
+                    {
+                        <ul class="mb-1 ps-4" style="font-size:0.85rem; color:#888;">
+                            @foreach (var opt in item.SelectedOptions)
+                            {
+                                <li>@opt.OptionName @(opt.PriceModifier > 0 ? $"(+{opt.PriceModifier}₺)" : "")</li>
+                            }
+                        </ul>
+                    }
                 }
                 <hr />
                 <div class="d-flex justify-content-between fw-bold">
