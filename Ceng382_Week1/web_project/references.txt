@@ -22,3 +22,13 @@ lab6
 [1] Gemini "ceng382-lab6" Gemini shared conversation [Online]
 Avaliable: https://gemini.google.com/share/6cfeabcf7bb3
 Accessed: Mar. 27, 2026
+
+----
+Project
+
+GitHub: https://github.com/atasoyturk/Ceng382_25-26_202211063
+YouTube: https://youtu.be/LvmNb23qAFQ
+
+[1] Claude "web proje" Claude shared conversation [Online]
+Available: https://claude.ai/share/fd235c4f-2644-44cb-8423-160115ea279d
+Accessed: Apr. 10, 2026

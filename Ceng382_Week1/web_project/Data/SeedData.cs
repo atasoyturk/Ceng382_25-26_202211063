@@ -91,11 +91,11 @@ namespace tastemam.Data
 
                     var menus = new List<Menu>
                     {
-                        new Menu { Name = $"{name} Düğün Menüsü", Description = $"{name} bölgesine özel düğün catering hizmeti.", Price = 350, Category = "Düğün", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 50 },
-                        new Menu { Name = $"{name} Kurumsal Menü", Description = $"{name} bölgesine özel kurumsal catering hizmeti.", Price = 150, Category = "Kurumsal", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 20 },
-                        new Menu { Name = $"{name} Özel Gün Menüsü", Description = $"{name} bölgesine özel gün catering hizmeti.", Price = 200, Category = "Özel Gün", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 25 },
-                        new Menu { Name = $"{name} Mezuniyet Menüsü", Description = $"{name} bölgesine özel mezuniyet catering hizmeti.", Price = 250, Category = "Mezuniyet", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 30 },
-                        new Menu { Name = $"{name} Kokteyl Menüsü", Description = $"{name} bölgesine özel kokteyl catering hizmeti.", Price = 180, Category = "Kokteyl", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 15 }
+                        new Menu { Name = $"{name} Düğün Menüsü", Description = $"{name} bölgesine özel düğün catering hizmeti.", Price = 350, Category = "Düğün", CaretakerID = districtUser.Id, ImagePath = "/uploads/dugun.png", Latitude = lat, Longitude = lng, MinOrderQuantity = 50 },
+                        new Menu { Name = $"{name} Kurumsal Menü", Description = $"{name} bölgesine özel kurumsal catering hizmeti.", Price = 150, Category = "Kurumsal", CaretakerID = districtUser.Id, ImagePath = "/uploads/kurumsal.png", Latitude = lat, Longitude = lng, MinOrderQuantity = 20 },
+                        new Menu { Name = $"{name} Özel Gün Menüsü", Description = $"{name} bölgesine özel gün catering hizmeti.", Price = 200, Category = "Özel Gün", CaretakerID = districtUser.Id, ImagePath = "/uploads/ozel_gun.png", Latitude = lat, Longitude = lng, MinOrderQuantity = 25 },
+                        new Menu { Name = $"{name} Mezuniyet Menüsü", Description = $"{name} bölgesine özel mezuniyet catering hizmeti.", Price = 250, Category = "Mezuniyet", CaretakerID = districtUser.Id, ImagePath = "/uploads/mezuniyet.png", Latitude = lat, Longitude = lng, MinOrderQuantity = 30 },
+                        new Menu { Name = $"{name} Kokteyl Menüsü", Description = $"{name} bölgesine özel kokteyl catering hizmeti.", Price = 180, Category = "Kokteyl", CaretakerID = districtUser.Id, ImagePath = "/uploads/kokteyl.png", Latitude = lat, Longitude = lng, MinOrderQuantity = 15 }
                     };
 
                     context.MenuItems.AddRange(menus);
