@@ -35,7 +35,7 @@ namespace tastemam.Data
                 await userManager.AddToRoleAsync(user, "User");
             }
 
-            // demo caretaker
+            // Demo caretaker
             if (await userManager.FindByEmailAsync("atasoyturkk+caretaker@gmail.com") == null)
             {
                 var caretaker = new IdentityUser { UserName = "atasoyturkk+caretaker@gmail.com", Email = "atasoyturkk+caretaker@gmail.com", EmailConfirmed = true };
@@ -43,7 +43,7 @@ namespace tastemam.Data
                 await userManager.AddToRoleAsync(caretaker, "Caretaker");
             }
 
-            // Ankara ilçeleri için caretaker ve menüler
+            // Ankara ilçeleri
             var districts = new[]
             {
                 ("altindag", "Altındağ", 39.9470, 32.8627),
@@ -87,80 +87,76 @@ namespace tastemam.Data
                     await userManager.CreateAsync(caretaker, "Caretaker123!");
                     await userManager.AddToRoleAsync(caretaker, "Caretaker");
 
-                    var user = await userManager.FindByEmailAsync(email);
+                    var districtUser = await userManager.FindByEmailAsync(email);
 
-                    if (!context.MenuItems.Any(m => m.CaretakerID == user.Id))
+                    var menus = new List<Menu>
                     {
-                        context.MenuItems.AddRange(
-                            new Menu
-                            {
-                                Name = $"{name} Düğün Menüsü",
-                                Description = $"{name} bölgesine özel düğün catering hizmeti.",
-                                Price = 350,
-                                Category = "Düğün",
-                                CaretakerID = user.Id,
-                                ImagePath = "",
-                                Latitude = lat,
-                                Longitude = lng
-                            },
-                            new Menu
-                            {
-                                Name = $"{name} Kurumsal Menü",
-                                Description = $"{name} bölgesine özel kurumsal catering hizmeti.",
-                                Price = 150,
-                                Category = "Kurumsal",
-                                CaretakerID = user.Id,
-                                ImagePath = "",
-                                Latitude = lat,
-                                Longitude = lng
-                            },
-                            new Menu
-                            {
-                                Name = $"{name} Özel Gün Menüsü",
-                                Description = $"{name} bölgesine özel gün catering hizmeti.",
-                                Price = 200,
-                                Category = "Özel Gün",
-                                CaretakerID = user.Id,
-                                ImagePath = "",
-                                Latitude = lat,
-                                Longitude = lng
-                            },
-                            new Menu
-                            {
-                                Name = $"{name} Mezuniyet Menüsü",
-                                Description = $"{name} bölgesine özel mezuniyet catering hizmeti.",
-                                Price = 250,
-                                Category = "Mezuniyet",
-                                CaretakerID = user.Id,
-                                ImagePath = "",
-                                Latitude = lat,
-                                Longitude = lng
-                            },
-                            new Menu
-                            {
-                                Name = $"{name} Kokteyl Menüsü",
-                                Description = $"{name} bölgesine özel kokteyl catering hizmeti.",
-                                Price = 180,
-                                Category = "Kokteyl",
-                                CaretakerID = user.Id,
-                                ImagePath = "",
-                                Latitude = lat,
-                                Longitude = lng
-                            }
-                        );
+                        new Menu { Name = $"{name} Düğün Menüsü", Description = $"{name} bölgesine özel düğün catering hizmeti.", Price = 350, Category = "Düğün", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 50 },
+                        new Menu { Name = $"{name} Kurumsal Menü", Description = $"{name} bölgesine özel kurumsal catering hizmeti.", Price = 150, Category = "Kurumsal", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 20 },
+                        new Menu { Name = $"{name} Özel Gün Menüsü", Description = $"{name} bölgesine özel gün catering hizmeti.", Price = 200, Category = "Özel Gün", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 25 },
+                        new Menu { Name = $"{name} Mezuniyet Menüsü", Description = $"{name} bölgesine özel mezuniyet catering hizmeti.", Price = 250, Category = "Mezuniyet", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 30 },
+                        new Menu { Name = $"{name} Kokteyl Menüsü", Description = $"{name} bölgesine özel kokteyl catering hizmeti.", Price = 180, Category = "Kokteyl", CaretakerID = districtUser.Id, ImagePath = "", Latitude = lat, Longitude = lng, MinOrderQuantity = 15 }
+                    };
+
+                    context.MenuItems.AddRange(menus);
+                    await context.SaveChangesAsync();
+
+                    foreach (var menu in menus)
+                    {
+                        if (menu.Category == "Düğün")
+                        {
+                            context.Ingredients.AddRange(
+                                new Ingredient { MenuID = menu.ID, Name = "Mercimek Çorbası", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Izgara Köfte (Yanında Köz Patlıcan)", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Karışık Salata", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Trilece Tatlısı", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Coca Cola (330ml)", IsRemovable = true }
+                            );
+                        }
+                        else if (menu.Category == "Kurumsal")
+                        {
+                            context.Ingredients.AddRange(
+                                new Ingredient { MenuID = menu.ID, Name = "Domates Çorbası", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Tavuk Şiş (Yanında Pilav)", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Mevsim Salata", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Sütlaç", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Su (500ml)", IsRemovable = false }
+                            );
+                        }
+                        else if (menu.Category == "Özel Gün")
+                        {
+                            context.Ingredients.AddRange(
+                                new Ingredient { MenuID = menu.ID, Name = "Ezogelin Çorbası", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Kuzu İncik (Yanında Bulgur Pilavı)", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Gavurdağı Salata", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Çikolatalı Sufle", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Limonata", IsRemovable = true }
+                            );
+                        }
+                        else if (menu.Category == "Mezuniyet")
+                        {
+                            context.Ingredients.AddRange(
+                                new Ingredient { MenuID = menu.ID, Name = "Yayla Çorbası", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Fırın Tavuk (Yanında Patates)", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Çoban Salata", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Baklava", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Ayran", IsRemovable = true }
+                            );
+                        }
+                        else if (menu.Category == "Kokteyl")
+                        {
+                            context.Ingredients.AddRange(
+                                new Ingredient { MenuID = menu.ID, Name = "Karışık Meze Tabağı", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Mini Sandviç Çeşitleri", IsRemovable = false },
+                                new Ingredient { MenuID = menu.ID, Name = "Meyve Tabağı", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Kurabiyelik Tatlı Çeşitleri", IsRemovable = true },
+                                new Ingredient { MenuID = menu.ID, Name = "Çay & Kahve", IsRemovable = false }
+                            );
+                        }
                     }
+                    await context.SaveChangesAsync();
                 }
             }
-
-            // Ana caretaker (efenayin)
-            if (await userManager.FindByEmailAsync("efenayin@tastemam.com") == null)
-            {
-                var caretaker = new IdentityUser { UserName = "efenayin@tastemam.com", Email = "efenayin@tastemam.com", EmailConfirmed = true };
-                await userManager.CreateAsync(caretaker, "caretakerefe");
-                await userManager.AddToRoleAsync(caretaker, "Caretaker");
-            }
-
-            await context.SaveChangesAsync();
         }
     }
 }

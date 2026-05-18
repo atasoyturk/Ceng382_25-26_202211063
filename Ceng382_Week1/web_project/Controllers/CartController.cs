@@ -43,6 +43,12 @@ namespace tastemam.Controllers
             var menu = _context.MenuItems.Find(menuId);
             if (menu == null) return NotFound();
 
+            if (quantity < menu.MinOrderQuantity)
+            {
+                TempData["Error"] = $"Bu menü için minimum sipariş miktarı {menu.MinOrderQuantity} kişidir.";
+                return RedirectToAction("Detail", "Home", new { id = menuId });
+            }
+
             var selectedOptions = new List<SelectedOption>();
             if (selectedOptionIds != null && selectedOptionIds.Any())
             {
