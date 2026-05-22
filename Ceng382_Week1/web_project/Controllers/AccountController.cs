@@ -66,7 +66,7 @@ namespace tastemam.Controllers
             }
 
             var roles = await _userManager.GetRolesAsync(user);
-            bool requiresTwoFactor = roles.Contains("Admin") || roles.Contains("Caretaker");
+            bool requiresTwoFactor = false;    // roles.Contains("Admin") || roles.Contains("Caretaker");
 
             if (requiresTwoFactor)
             {
