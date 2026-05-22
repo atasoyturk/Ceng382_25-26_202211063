@@ -24,26 +24,18 @@ namespace tastemam.Services
                 model = "llama3-8b-8192",
                 messages = new[]
                 {
-                    new
-                    {
-                        role = "system",
-                        content = "Sen TasteMam Catering platformunun yardımcı asistanısın. TasteMam, düğün, kurumsal etkinlik, özel gün, mezuniyet ve kokteyl gibi organizasyonlar için profesyonel catering hizmeti sunan bir platformdur. Kullanıcılara menüler, siparişler, ödeme, caretaker hizmetleri ve platform kullanımı hakkında yardımcı ol. Kısa, net ve yardımcı cevaplar ver. Türkçe konuş."
-                    },
-                    new
-                    {
-                        role = "user",
-                        content = userMessage
-                    }
+                    new { role = "system", content = "Sen TasteMam Catering platformunun yardımcı asistanısın. Türkçe konuş, kısa ve net yanıtlar ver." },
+                    new { role = "user", content = userMessage }
                 },
                 max_tokens = 500
             };
 
             var json = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(url, content);
+            var response = await _httpClient.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var doc = JsonDocument.Parse(responseBody);
